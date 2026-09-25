@@ -1,0 +1,17 @@
+# Card metadata consumed by https://designmolecule.com
+name: MachinePulse
+slug: machinepulse
+area: Automation
+status: concept          # concept | design | prototype | tested | released
+shortlisted: false
+pitch: >-
+  A clip-on monitor for older machines: current clamp, vibration and temperature sensors report run time, load and early fault signs from lathes, pumps and compressors that have no electronics of their own.
+problem: >-
+  Small factories run machines that have no monitoring, so breakdowns arrive without warning and utilization is unknown.
+budget_usd: 80
+difficulty: 2  # 1 easiest, 5 hardest
+hero_image: media/hero.png
+licenses:
+  hardware: CERN-OHL-S-2.0
+  software: MIT
+tags: [automation, open-hardware, cern-ohl-s]
