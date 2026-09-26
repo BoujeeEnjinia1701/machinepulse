@@ -39,11 +39,11 @@ The firms with the least monitoring are the most numerous. Small and medium ente
 
 | Country or region | Why it matters there |
 | --- | --- |
-| India | About 63.4 million unincorporated micro, small and medium enterprises employing about 111 million people in the 2015 to 2016 survey ([PIB, Ministry of MSME](https://www.pib.gov.in/Pressreleaseshare.aspx?PRID=1555596)); most run older machines with no monitoring |
+| India | About 63.4 million unincorporated micro, small and medium enterprises employing about 111 million people in the 2015 to 2016 survey ([PIB, Ministry of MSME](https://www.pib.gov.in/Pressreleaseshare.aspx?PRID=1555596)); firms of that size are the ones MachinePulse is costed for |
 | Sub-Saharan Africa | The IEA calls reliability of power supply "a major problem in Africa" and expects electric irrigation pumps to replace diesel ([IEA Africa Energy Outlook 2022](https://www.iea.org/reports/africa-energy-outlook-2022/key-findings)); poor supply stresses motors, so early fault signs matter |
 | Latin America and the Caribbean | Micro, small and medium firms are 99 % of the industrial fabric but have much lower productivity than large firms ([ECLAC](https://www.cepal.org/en/topics/micro-small-and-medium-sized-enterprises-msmes)) |
-| European Union | 99 % of the 32.3 million enterprises are micro or small ([Eurostat, 2024](https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20241025-1)); many run long-lived machine tools that predate connected equipment |
-| United States | More than 98 % of the roughly 244,000 manufacturers employ fewer than 500 people, and about 74 % fewer than 20 ([ITIF, citing NAM](https://itif.org/publications/2025/06/17/mep-program-critical-for-small-manufacturers-underpinning-america-s-manufacturing-revival/)) |
+| European Union | 99 % of the 32.3 million enterprises are micro or small ([Eurostat, 2024](https://ec.europa.eu/eurostat/web/products-eurostat-news/w/ddn-20241025-1)); a low-cost retrofit suits firms of that size |
+| United States | Small firms are 98 % of manufacturers ([SBA Office of Advocacy, 2025](https://advocacy.sba.gov/2025/03/10/facts-about-small-business-manufacturing-statistics-2025/)); of 239,265 manufacturing firms in 2022, all but 4,177 had fewer than 500 employees and about three-quarters had fewer than 20 ([NAM, citing Census Bureau Statistics of U.S. Businesses](https://nam.org/mfgdata/facts-about-manufacturing-expanded/)) |
 
 ## What sparked the idea
 
@@ -94,6 +94,12 @@ The priced bill of materials is in [bom/bom.csv](bom/bom.csv); the parametric mo
 ## Documentation
 
 Controlled documents follow the portfolio [documentation standard](.kit/STANDARDS.md). Each carries a document ID (MPL-PRC-001 for the precis), a version and a revision history. Branded PDFs are built with `python .kit/render.py` and attached to GitHub Releases when a document is tagged, for example `MPL-PRC-001/v1.0`.
+
+## Credits
+
+Designed by Amish Chadha. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for roles. To cite this design, use [CITATION.cff](CITATION.cff) (GitHub shows it as "Cite this repository").
+
+AI assistance (Claude) was used to accelerate concept renders, prototype documentation and first-pass sizing calculations. Design direction and all decisions are Amish Chadha's, recorded in this repository's decision records (`docs/decisions/`).
 
 ## Licenses
 

@@ -166,3 +166,10 @@ None. The decisions change no interface with TwinKit, FieldNode or CalRig.
 ### TRL 4
 
 TRL 4 remains on hold by Amish's instruction. `trl: 3` and `trl_target: 3` are unchanged. No build, test, pilot, purchasing, PCB or firmware work was started.
+
+## Session 2026-09-26: sources strengthened
+
+- README, "By country or region", United States row: ITIF policy article (itif.org, citing NAM) replaced by the SBA Office of Advocacy manufacturing statistics (98 % of manufacturers are small), with NAM's Census-based figures (239,265 firms in 2022, all but 4,177 under 500 employees, about three-quarters under 20) kept alongside. The earlier "roughly 244,000" figure is replaced by the verified 2022 count.
+- README, India and European Union rows: uncited statements about machine age removed; each row now states only what its source supports.
+- All other README links (NIST, IEA, World Bank, PIB, IEA Africa Energy Outlook, ECLAC, Eurostat, Toyota Industries, Toyota) were fetched and confirmed to support their claims. "What sparked the idea" unchanged; it already rests on Toyota's own history pages.
+- No controlled document changed; no budget change.
