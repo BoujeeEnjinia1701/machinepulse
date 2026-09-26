@@ -3,7 +3,7 @@ doc_id: MPL-PRB-001
 title: MachinePulse problem statement
 project: MachinePulse
 doc_type: Problem statement
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Populate to TRL 2 (problem, users, context, constraints, prior work)
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Open questions updated for the items adopted for TRL 3 in MPL-DDR-001; CT constraint noted from MPL-CAL-001
 ---
 
 # MachinePulse problem statement
@@ -46,7 +50,7 @@ Typical machines: lathes and mills, bench and pillar drills, air compressors, wa
 ## Constraints
 
 - Garage-buildable prototype, about $80 USD per monitored machine, from off-the-shelf modules and hand-made parts, with no custom PCB for the first build.
-- Non-invasive: no change to the machine's wiring, controls or guarding. The pod attaches by magnets; the current clamp goes around one existing insulated conductor.
+- Non-invasive: no change to the machine's wiring, controls or guarding. The pod attaches by magnets; the current clamp goes around one existing insulated single-core conductor (a multi-core cable carries currents that cancel, so the clamp cannot read it).
 - Works on old machines with no electronics of their own, on cast iron, steel or aluminium frames.
 - Low voltage only inside the pod (5 V USB from a certified adapter).
 - Survives a workshop: dust, oil mist, splashes and frame temperatures typical of running motors.
@@ -64,6 +68,7 @@ Typical machines: lathes and mills, bench and pillar drills, air compressors, wa
 
 ## Open questions
 
-- First pilot site and machines: a makerspace or university workshop, a small machine shop, or a food or grain processing unit? Proposed: a makerspace or university workshop with a lathe and a compressor, awaiting Amish.
-- Co-design partner for the alerts and dashboard: who decides what "changed" should mean to an operator? Proposed, awaiting Amish.
-- Single-phase and three-phase coverage in the first build: Proposed: one CT on one phase for both, awaiting Amish.
+- First pilot site and machines: a makerspace or university workshop with a lathe and a compressor. Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (MPL-DDR-001, D8).
+- Co-design partner for the alerts and dashboard: who decides what "changed" should mean to an operator? No recommendation was made. Proposed, awaiting Amish (MPL-DDR-001, O1).
+- Single-phase and three-phase coverage in the first build: one CT on one phase for both. Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review (MPL-DDR-001, D4). Whether energy per shift (R4) is then accepted as at risk or relaxed to a relative trend is still awaiting Amish (O2).
+- How many machines in a small shop offer a single insulated phase conductor outside a closed enclosure. MPL-CAL-001 finds R10 not met where they do not; the pilot site should show how common this is.

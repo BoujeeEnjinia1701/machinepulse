@@ -3,7 +3,7 @@ doc_id: MPL-PRC-001
 title: MachinePulse design precis
 project: MachinePulse
 doc_type: Design precis
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -17,46 +17,52 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Populate to TRL 2 (architecture, first-order numbers, safety, media)
+- version: "0.3"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: TRL 3 update; design choices adopted per MPL-DDR-001; numbers from MPL-CAL-001; stand-offs, CT clamp, 1.50 V bias, +-16 g range, module variant and 3 mm pads added; GA drawing MPL-DWG-001
 ---
 
 # MachinePulse design precis
 
 ## Summary
 
-MachinePulse is a small magnetic pod that clips onto an old machine's motor frame, plus a split-core current transformer (CT) on one phase conductor and a surface temperature probe. Every minute it reports run state, run time, load current, vibration velocity and frame temperature to a TwinKit gateway or any MQTT broker on the shop network, and every 15 minutes it sends a vibration spectrum. First-order numbers suggest that stock modules and a hand-made aluminium sensor block meet most requirements for about $79 in parts. Three requirements are not met: energy accuracy with one CT (R4), installation without opening live enclosures on many machines (R10), and hot frames above about 60 °C (R12).
+MachinePulse is a small magnetic pod that clips onto an old machine's motor frame, plus a split-core current transformer (CT) on one phase conductor and a surface temperature probe. Every minute it reports run state, run time, load current, vibration velocity and frame temperature to a TwinKit gateway or any MQTT broker on the shop network, and every 15 minutes it sends a vibration spectrum. The TRL 3 calculation note MPL-CAL-001 finds that stock modules, a hand-made aluminium sensor block and a stock box meet ten of the seventeen requirements for $80.00 in parts, exactly the budget. One requirement is not met: fitting the CT without opening a live enclosure on many machines (R10). Six are at risk: current accuracy at the bottom of the CT range (R3), energy per shift (R4), the magnet mount's resonance inside the vibration band (R5), probe accuracy above 85 °C (R8), the standard magnets' 80 °C limit (R12) and the zero cost margin (R16). The design choices below were adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction and remain open for his review (MPL-DDR-001).
 
 ![Hero render](../media/hero.png)
 
-Figure 1. MachinePulse on a 7.5 kW class induction motor (grey, for scale). Massing model; concept, not for fabrication.
+Figure 1. MachinePulse on a 7.5 kW class induction motor (grey, for scale), generated from the parametric model `cad/src/model.py`. Concept, not for fabrication.
 
 ## How it works
 
-1. **Sense current.** A voltage-output split-core CT (YHDC SCT-013 family) clamps one insulated phase conductor. The pod samples it at 2 kHz and computes RMS current every second.
-2. **Sense vibration.** A wideband MEMS accelerometer (IIS3DWB class, dc to 6 kHz, 75 µg/√Hz noise density, 1.1 mA ([ST](https://www.st.com/en/mems-and-sensors/iis3dwb.html))) sits on the boss of an aluminium sensor block. Two pot magnets under the block pull it onto the machine frame, so vibration reaches the sensor through metal, not through the plastic box.
-3. **Sense temperature.** A DS18B20 probe in a stainless sleeve sits in a small magnetic clip on the frame near a bearing.
-4. **Summarize on the pod.** Every 60 s the ESP32-S3 controller records a 4 s vibration burst, decimates it to 3.33 kHz, and computes velocity RMS over 10 to 1,000 Hz (the ISO 20816-1 band ([ISO](https://www.iso.org/standard/63180.html))), acceleration RMS, crest factor and the amplitudes at 1x and 2x running speed. It adds run state, run seconds, mean and peak current, starts, and temperature.
-5. **Send and store.** The summary goes over Wi-Fi to an MQTT broker, by default on the TwinKit gateway. If the network is down, summaries queue in flash for about 10 days.
-6. **Compare with the machine's own baseline.** During the first week of running, the gateway software learns a baseline per load band. Afterward it flags a change, for example vibration velocity above twice its baseline or temperature rise above baseline at the same load, for a person to inspect.
+1. **Sense current.** A voltage-output split-core CT (YHDC SCT-013 family, 5 to 60 A variants) clamps one insulated single-core phase conductor. The interface board biases its output at 1.50 V, so a full-range signal stays inside the ADC's linear window, and clamps the input against starting current. The pod samples at 2 kHz and computes RMS current every second.
+2. **Sense vibration.** A wideband MEMS accelerometer (IIS3DWB class, dc to 6 kHz, 75 µg/√Hz noise density, 1.1 mA ([ST](https://www.st.com/en/mems-and-sensors/iis3dwb.html))), set to ±16 g, sits on a 20 mm round boss of an aluminium sensor block, directly above one of two pot magnets. The magnets pull the block onto the frame, so vibration reaches the sensor through metal, not through the plastic box.
+3. **Sense temperature.** A DS18B20 probe in a stainless sleeve sits in a small magnetic clip with a thermal pad on the frame near a bearing.
+4. **Summarize on the pod.** Every 60 s the ESP32-S3 controller records a 4 s vibration burst, decimates it from 26.7 kHz to 3.33 kHz as it reads the sensor, and computes velocity RMS over 10 to 1,000 Hz (the ISO 20816-1 band ([ISO](https://www.iso.org/standard/63180.html))), acceleration RMS, crest factor and the amplitudes at 1x and 2x running speed. It adds run state, run seconds, mean and peak current, starts, and temperature.
+5. **Send and store.** The summary goes over Wi-Fi to an MQTT broker, by default on the TwinKit gateway. If the network is down, summaries queue in flash for about 14 days; spectra are kept only while space allows.
+6. **Compare with the machine's own baseline.** During the first week of running, the gateway software learns a baseline per load band. Afterward it flags a change, for example vibration velocity above twice its baseline or temperature rise above baseline at the same load, for a person to inspect. Energy per shift uses a power factor curve built from the nameplate and the measured no-load current.
 
 ![Data flow](../media/flow.png)
 
-Figure 2. Data flow from machine to maintenance team. Values are estimates.
+Figure 2. Data flow from machine to maintenance team. Values are estimates from MPL-CAL-001.
 
 ## Main components
 
 Table 1. Main components. Numbers match the BOM and Figure 3.
 
-| # | Component | Proposed choice | Notes |
+| # | Component | Choice | Notes |
 | --- | --- | --- | --- |
-| 1, 2 | Enclosure | Stock IP54 ABS box, about 100 x 68 x 40 mm, two M12 IP68 cable glands, LED window | Stock box keeps cost low; printed alternative in the review note |
-| 3 | Controller | ESP32-S3 module board, 8 MB flash, USB-C, Wi-Fi and BLE | Radio choice proposed, awaiting Amish |
-| 4 | Accelerometer | IIS3DWB-class 3-axis MEMS on a breakout | Fallback ADXL345 class, cheaper and noisier |
-| 5 | Sensor block | 76 x 36 x 10 mm aluminium with a 20 x 20 mm boss through the box floor | Carries magnets and sensor; stiff path to the frame |
-| 6 | Magnets | Two 32 mm neodymium pot magnets with M6 studs | Steel adhesive pads (BOM line 11) for aluminium frames |
-| 7 | Interface board | Perfboard with CT bias and filter, 3.5 mm jack, probe connector, LED, button | No custom PCB for the first build |
-| 8 | Current transformer | SCT-013 family, voltage output, range per machine (for example 30 A) | Voltage output has an internal burden, so it is never open-circuited |
+| 1, 2 | Enclosure | Stock IP54 ABS box, 100 x 68 x 40 mm, two M12 IP68 cable glands, LED window, 24 mm hole for the boss | Stock box keeps cost low (D7) |
+| 3 | Controller | ESP32-S3 module board, 8 MB flash, no octal PSRAM, USB-C, Wi-Fi and BLE | Module rated to 85 °C; PSRAM variants are rated to 65 °C (D1) |
+| 4 | Accelerometer | IIS3DWB-class 3-axis MEMS on an 18 x 18 mm adapter board, ±16 g | ADXL345-class fallback misses R6 (D3) |
+| 5 | Sensor block | 76 x 36 x 10 mm aluminium with a 20 mm round boss 11 mm high through the box floor | Carries magnets and sensor; stiff path to the frame |
+| 6 | Magnets | Two 32 mm neodymium pot magnets with M6 studs, 40 mm apart | Standard grade limits hot frames to about 81 °C (R12) |
+| 7 | Interface board | Perfboard with 1.50 V CT bias and filter, series resistor and clamp diodes, 3.5 mm jack, probe connector, LED, button | No custom PCB for the first build |
+| 8 | Current transformer | SCT-013 family, voltage output, 13 mm aperture, 5 to 60 A chosen per machine (30 A for the design case) | Voltage output has an internal burden, so it is never open-circuited (D4) |
 | 9 | Temperature probe | DS18B20 in stainless sleeve, magnetic clip, thermal pad | |
-| 10 | Power | Certified 5 V 1 A USB-C adapter and 2 m cable | Low voltage only in the pod |
+| 10 | Power | Certified 5 V 1 A USB-C adapter and 2 m cable | Low voltage only in the pod (D2) |
+| 11 | Steel pads | 35 mm x 3 mm steel discs with epoxy, for aluminium frames | 3 mm keeps about 75 % of the pull |
+| 12, 13 | Hardware and stand-offs | Screws, silicone boot round the boss; four 6 x 5 mm nylon stand-offs | The stand-offs are the thermal break studied under D7 |
 
 ![Exploded view](../media/exploded.png)
 
@@ -64,46 +70,49 @@ Figure 3. Exploded view with BOM numbers.
 
 ![Cutaway](../media/cutaway.png)
 
-Figure 4. Cutaway through the accelerometer: the sensor sits on the aluminium block, which sits on the magnets, so the plastic box carries no vibration path.
+Figure 4. Cutaway through the accelerometer: the sensor sits on the boss of the aluminium block, which sits on the magnets; the box stands 5 mm clear of the block on nylon stand-offs and carries no vibration path.
 
-## First-order numbers
+The general arrangement drawing [MPL-DWG-001](../cad/drawings/MPL-DWG-001.pdf) (Rev P1, 1:1) gives the main dimensions: pod 100 x 68 x 63 mm high from the magnet face, 132 mm over the glands.
 
-All values are estimates for concept review and will be checked at TRL 3.
+## Key numbers
 
-Table 2. First-order numbers.
+All values come from MPL-CAL-001 and are estimates for a paper proof of concept.
 
-| Quantity | Estimate | Basis and assumptions | Requirement |
-| --- | --- | --- | --- |
-| Example full-load current | about 14.6 A | 7.5 kW motor, 400 V three-phase, efficiency 0.88, power factor 0.84 (typical values, assumed) | Sizes the CT: 30 A range, full load at about half range |
-| Current sampling | 2 kHz, 40 samples per 50 Hz cycle | ESP32-S3 ADC | R1, R3 |
-| Current accuracy | about 3 % of reading, 10 % to 100 % of range | Two-point calibration; ADC nonlinearity is the main error | R3 met |
-| Energy accuracy | about 20 % | One phase, assumed voltage and power factor, balanced phases | R4 **not met** |
-| Vibration band | 10 to 1,000 Hz | 4 s burst decimated to 3.33 kHz | R5 met |
-| Spectrum resolution | 0.41 Hz | 8,192-point FFT at 3.33 kHz; 1x at 1,450 rpm is 24.2 Hz | R7 met |
-| Velocity noise floor | about 0.04 mm/s RMS | 75 µg/√Hz integrated as velocity over 10 to 1,000 Hz; mount effects not included | R6 met on datasheet |
-| Magnet mount | usable to about 2 kHz (estimate) | Typical for flat magnetic mounts on a clean surface; to be checked | R5 |
-| Pod mass | about 0.35 kg | Box and glands 125 g, block 80 g, magnets 100 g, electronics and leads 45 g | |
-| Magnet holding margin | about 6 times | Assumes about 100 N total pull on a painted, curved cast frame (20 % of flat-steel rating) against 0.35 kg at 5 g (about 17 N) | R11 unverified |
-| Power | about 0.5 W from 5 V (about 4.4 kWh per year) | Wi-Fi with modem sleep about 80 mA at 3.3 V, sensors about 5 mA, regulator losses | |
-| Data volume | about 0.4 MB per day | 200 B summary per minute plus 1 kB spectrum every 15 min | R9 met |
-| Offline store | about 10 days | 4 MB of the 8 MB flash reserved for the queue | R15 met |
-| Frame temperature limit | about 60 °C | ABS box and module on an aluminium block that runs near frame temperature | R12 **not met** for 80 °C |
-| Parts cost | about $79 | Indicative prices, see `bom/bom.csv` | R16 met, thin margin |
+Table 2. Key numbers.
+
+| Quantity | Value | Requirement |
+| --- | --- | --- |
+| Design motor full-load current | 14.6 A, 49 % of a 30 A CT | Sizes the CT |
+| Current accuracy | 2.1 % RSS at the design point; 3.6 % RSS and 7.0 % worst case at 10 % of range | R3 at risk |
+| Energy per shift | 8.5 % RSS with a power factor curve; 26 % with a fixed power factor | R4 at risk |
+| Velocity noise floor | 0.037 mm/s RMS, 10 to 1,000 Hz | R6 met |
+| Spectrum resolution | 0.407 Hz bins (8,192 points at 3,333 Hz) | R7 met |
+| Magnet mount resonance | About 927 Hz on a painted curved frame, 1,853 Hz flat | R5 at risk |
+| Pod mass | About 0.30 kg | |
+| Magnet holding | Slip margin 3.3 on a painted curved frame; pull-off 13.2 | R11 met |
+| Probe error | 1.56 K at 80 °C; about 3.6 K at 100 °C | R8 at risk |
+| Hot frame, 40 °C air | Floor 53.9 °C and module about 58.9 °C at an 80 °C frame; magnets reach 80 °C at an 81.3 °C frame | R12 at risk |
+| Power | 0.42 W from 5 V; 0.61 W and 5.3 kWh a year at the wall | |
+| Data | 1.15 MB per day; worst delivery 66 s | R9 met |
+| Offline store | 13.9 days of summaries | R15 met |
+| Parts cost | $80.00 against $80 | R16 at risk |
 
 ## Key design choices
 
-- **Stiff sensor path, plastic box for protection only.** The accelerometer sits on the aluminium block, and the block sits on the magnets. This is the cheapest way to get a usable vibration signal from a magnet-mounted pod.
-- **Features on the pod, spectra on a slow schedule.** Summaries every minute and a spectrum every 15 minutes keep traffic near 0.4 MB a day, so one gateway can serve many machines. Raw bursts can be captured on demand for diagnosis. Proposed, awaiting Amish.
-- **One CT on one phase.** Enough for run state, run hours and relative load, within budget. It is not an energy meter (R4). Three CTs is an option at about $20 more. Proposed: one CT, awaiting Amish.
-- **Wi-Fi first.** Small workshops usually have Wi-Fi, and spectra are too large for a LoRaWAN duty cycle. A summaries-only LoRaWAN variant could reuse the FieldNode radio core later. Proposed, awaiting Amish.
-- **Mains-powered adapter, no battery.** A certified 5 V adapter avoids lithium cells on a hot, vibrating frame. Proposed, awaiting Amish.
-- **Baseline, not fixed limits.** Old machines differ too much for fixed alarm levels to be useful at first. Each machine is compared with its own first week, by load band, and flags go to a person. Proposed, awaiting Amish.
-- **Data stays local.** MQTT to the TwinKit gateway, where the twin shows readings on the machine's model; any other broker works too.
+These choices were adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction and remain open for his review (MPL-DDR-001).
+
+- **Stiff sensor path, plastic box for protection only (D7).** The accelerometer sits on the aluminium block's boss above a magnet, and the block sits on the magnets. The box rides on four nylon stand-offs 5 mm above the block, which keeps its floor 13 K cooler on a hot frame. The mount still resonates inside the upper vibration band on curved frames (R5).
+- **Features on the pod, spectra on a slow schedule (D10).** Summaries every minute and a spectrum every 15 minutes come to about 1.15 MB a day, so one gateway can serve many machines. Raw bursts can be captured on demand for diagnosis.
+- **One CT on one phase (D4).** Enough for run state, run hours and relative load, within budget. With a power factor curve the energy estimate is at risk rather than not met; a voltage reference or three CTs would cost $10 to $20 more.
+- **Wi-Fi first (D1).** Small workshops usually have Wi-Fi, and 7.4 kB spectra are far too large for a LoRaWAN duty cycle. A summaries-only LoRaWAN variant could reuse the FieldNode radio core later.
+- **Mains-powered adapter, no battery (D2).** A certified 5 V adapter avoids lithium cells on a hot, vibrating frame.
+- **Baseline, not fixed limits (D5).** Old machines differ too much for fixed alarm levels to be useful at first. Each machine is compared with its own first week, by load band, and flags go to a person.
+- **Data stays local (D6).** MQTT to the TwinKit gateway, where the twin shows readings on the machine's model; any other broker works too.
 
 ## Relation to other lab projects
 
-- **TwinKit** is the default data home: its gateway runs an MQTT broker, stores data offline and shows readings against a model. MachinePulse is a natural first "small manufacturing" twin for it.
-- **FieldNode** provides a LoRaWAN radio core if a summaries-only variant is wanted for sites without Wi-Fi.
+- **TwinKit** is the default data home: its gateway accepts MQTT over Ethernet or Wi-Fi, stores data offline and shows readings against a model (TwinKit REQ R2). MachinePulse adds about 1.15 MB a day per machine, small against TwinKit's storage budget. MachinePulse is a natural first "small manufacturing" twin for it.
+- **FieldNode** provides a LoRaWAN radio core if a summaries-only variant is wanted for sites without Wi-Fi. Only summaries would fit its 20-byte class payloads; spectra would not.
 - **CalRig** can check the temperature probe against a reference before deployment. Vibration calibration needs a separate reference (a shaker or a known accelerometer) that CalRig does not provide.
 
 ## Safety
@@ -112,18 +121,17 @@ Table 2. First-order numbers.
 
 > **Safety:** Moving machinery. Fit and remove the pod and probe only when the machine is stopped and isolated. Mount on stationary frames, never on guards that open or on moving parts. Route leads away from belts, shafts, chucks and fans, and secure them with ties.
 
-> **Safety:** Hot surfaces and magnets. Motor frames and compressor heads can be hot enough to burn. Strong neodymium magnets can pinch fingers and snap together; keep them away from pacemakers and magnetic media.
+> **Safety:** Hot surfaces and magnets. Motor frames and compressor heads can be hot enough to burn; the sensor block runs within a few kelvin of the frame. Strong neodymium magnets can pinch fingers and snap together; keep them away from pacemakers and magnetic media.
 
 > **Safety:** Power supply. Use only a certified 5 V adapter with the local safety mark. The pod contains no mains wiring and no lithium cells.
 
 MachinePulse is a monitoring aid. It is not a protective device, it must never be wired into machine controls, and it does not replace overload relays, guards or scheduled maintenance.
 
-## Open questions for TRL 3
+## Open questions
 
-- Check the magnet mount: pull force on painted curved frames, and the usable frequency range with the block and two magnets.
-- Error budget for current on the ESP32-S3 ADC, and whether an external ADC is needed.
-- Frame temperature limit: a stand-off, insulating pad or higher-temperature enclosure for compressors and hot motors (R12).
-- Whether a voltage reference or three CTs are worth the cost to meet R4. Proposed: no for the first build, awaiting Amish.
-- Pilot site and first machines, awaiting Amish.
+- R4 with one CT: accept "at risk", relax to a relative energy trend, or add a voltage reference. Awaiting Amish (MPL-DDR-001, O2).
+- Co-design partner for alerts and dashboard. Awaiting Amish (MPL-DDR-001, O1).
+- High-temperature magnets for hot frames (R12), and the R8 temperature range. Proposed in the review note, awaiting Amish.
+- Measured values for the assumptions MPL-CAL-001 rests on: ESP32-S3 ADC residual error, magnet contact stiffness and pull on painted frames. These need bench work, which belongs to TRL 4 and is on hold.
 
 Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html).
