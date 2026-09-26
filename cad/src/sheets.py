@@ -1,4 +1,4 @@
-"""MachinePulse general arrangement sheet MPL-DWG-001, Rev P1 (TRL 3).
+"""MachinePulse general arrangement sheet MPL-DWG-001, Rev P2 (TRL 3).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/MPL-DWG-001.svg, .pdf and .png from the parametric model in
@@ -71,10 +71,11 @@ def main():
     inst = Compound(children=[assembly(), motor_context(P)])
     views["iso"] = project_views(inst, work / "iso")["iso"]
     bb = pod.bounding_box()
-    s = Sheet(project="MachinePulse", title="General arrangement", dwg_no="MPL-DWG-001", rev="P1",
+    s = Sheet(project="MachinePulse", title="General arrangement", dwg_no="MPL-DWG-001", rev="P2",
               author="Amish Chadha", date=DATE, scale=1.0, theme="technical",
               material="ABS box, 6061 block, nylon stand-offs; bought-in parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
-              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC")])
+              revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
+                         ("P2", "High-temperature magnets per MPL-DDR-002", DATE, "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -133,7 +134,7 @@ def main():
               sublabel="Not to scale; motor grey context, not in the BOM")
     s.add_notes("Main dimensions and interfaces (mm)", [
         f"Pod {L:.0f} x {W:.0f} x {D['pod_h']:.0f} high from magnet face; {D['pod_len_glands']:.0f} over glands",
-        f"Two D{P['mag_d']:.0f} pot magnets, M6 studs, {P['mag_pitch']:.0f} pitch on the frame top line",
+        f"Two D{P['mag_d']:.0f} pot magnets rated {P['mag_t_max']:.0f} °C, M6 studs, {P['mag_pitch']:.0f} pitch",
         f"Block {bl:.0f} x {bw:.0f} x {bt:.0f} aluminium; boss D{P['boss_d']:.0f} x {D['boss_h']:.0f} through a D{P['floor_hole_d']:.0f} hole",
         f"Four nylon stand-offs D{P['standoff_d']:.0f} x {P['standoff_h']:.0f}; silicone boot seals the boss",
         f"IP54 ABS box, base {H - P['lid_h']:.0f} + lid {P['lid_h']:.0f}; boards on {P['board_standoff']:.0f} stand-offs",

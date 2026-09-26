@@ -32,15 +32,15 @@
 
 ### Proposed, awaiting Amish
 
-1. **Radio.** Options: Wi-Fi on ESP32-S3; LoRaWAN summaries only via the FieldNode radio core; both. Recommendation: Wi-Fi first, because spectra do not fit a LoRaWAN duty cycle and small shops usually have Wi-Fi.
-2. **Power.** Options: certified 5 V USB adapter; Li-ion battery; energy harvesting from the CT. Recommendation: adapter, which avoids lithium cells on hot, vibrating frames.
-3. **Accelerometer.** Options: IIS3DWB class (about $15, low noise, dc to 6 kHz); ADXL345 class (about $6, noisier, about 1.6 kHz). Recommendation: IIS3DWB class; keep ADXL345 as a documented fallback.
-4. **Current sensing.** Options: one CT on one phase (within budget); three CTs (about $20 more, over budget); one CT plus a voltage reference. Recommendation: one CT, and accept that R4 is not met in the first build, or relax R4 to "relative energy trend".
-5. **Alert logic.** Baseline learned over the first week per load band, flags at twice baseline vibration or a temperature rise above baseline, sent to a person. Recommendation: adopt for the first build; fixed ISO 20816 zones as a later option.
-6. **Data home.** Options: TwinKit gateway; any MQTT broker; a cloud service. Recommendation: TwinKit gateway with any broker supported, no cloud dependency.
-7. **Enclosure.** Options: stock IP54 ABS box; 3D-printed box; die-cast aluminium box (better for R12, about $10 more). Recommendation: stock ABS box for the first build, with a stand-off or insulating pad studied at TRL 3 for hot frames.
-8. **Pilot site.** Options: a makerspace or university workshop; a small machine shop; a food or grain processing unit. Recommendation: a makerspace or university workshop with a lathe and a compressor.
-9. **Budget.** No change proposed: the parts total of about $79 is within the $80 budget. A three-CT or die-cast variant would need a budget increase, which is Amish's decision.
+1. **Radio.** Options: Wi-Fi on ESP32-S3; LoRaWAN summaries only via the FieldNode radio core; both. Recommendation: Wi-Fi first, because spectra do not fit a LoRaWAN duty cycle and small shops usually have Wi-Fi. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002).
+2. **Power.** Options: certified 5 V USB adapter; Li-ion battery; energy harvesting from the CT. Recommendation: adapter, which avoids lithium cells on hot, vibrating frames. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002).
+3. **Accelerometer.** Options: IIS3DWB class (about $15, low noise, dc to 6 kHz); ADXL345 class (about $6, noisier, about 1.6 kHz). Recommendation: IIS3DWB class; keep ADXL345 as a documented fallback. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002).
+4. **Current sensing.** Options: one CT on one phase (within budget); three CTs (about $20 more, over budget); one CT plus a voltage reference. Recommendation: one CT, and accept that R4 is not met in the first build, or relax R4 to "relative energy trend". **One CT: decided by Amish, 2026-09-25: go with recommendation.** The R4 treatment offered two courses without choosing and stays **Proposed, awaiting Amish** (MPL-DDR-001, O2).
+5. **Alert logic.** Baseline learned over the first week per load band, flags at twice baseline vibration or a temperature rise above baseline, sent to a person. Recommendation: adopt for the first build; fixed ISO 20816 zones as a later option. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002).
+6. **Data home.** Options: TwinKit gateway; any MQTT broker; a cloud service. Recommendation: TwinKit gateway with any broker supported, no cloud dependency. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002).
+7. **Enclosure.** Options: stock IP54 ABS box; 3D-printed box; die-cast aluminium box (better for R12, about $10 more). Recommendation: stock ABS box for the first build, with a stand-off or insulating pad studied at TRL 3 for hot frames. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002).
+8. **Pilot site.** Options: a makerspace or university workshop; a small machine shop; a food or grain processing unit. Recommendation: a makerspace or university workshop with a lathe and a compressor. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002).
+9. **Budget.** No change proposed: the parts total of about $79 is within the $80 budget. A three-CT or die-cast variant would need a budget increase, which is Amish's decision. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002). Later superseded by the high-temperature magnet decision, which raised the budget to $81.
 
 ### Safety concerns
 
@@ -92,15 +92,15 @@ Key numbers: design motor 14.6 A on a 30 A CT; pod 100 x 68 x 63 mm, 295 g; 0.42
 
 ### Decisions recorded (MPL-DDR-001)
 
-Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review: D1 Wi-Fi first; D2 certified 5 V adapter; D3 IIS3DWB class with ADXL345 fallback; D4 one CT on one phase; D5 first-week baseline alerts to a person; D6 TwinKit or any MQTT broker, no cloud; D7 stock ABS box with a stand-off studied (5 mm nylon stand-offs adopted from the study); D8 makerspace or university workshop pilot; D9 no budget change; D10 features every minute and a spectrum every 15 min. No reworded pitch or problem line was recommended, so `project.yaml` and `README.md` keep the existing wording. `budget_usd` stays $80.
+Decided by Amish, 2026-09-25: go with recommendation (first adopted for TRL 3 under his instruction, then accepted; see MPL-DDR-002): D1 Wi-Fi first; D2 certified 5 V adapter; D3 IIS3DWB class with ADXL345 fallback; D4 one CT on one phase; D5 first-week baseline alerts to a person; D6 TwinKit or any MQTT broker, no cloud; D7 stock ABS box with a stand-off studied (5 mm nylon stand-offs adopted from the study); D8 makerspace or university workshop pilot; D9 no budget change; D10 features every minute and a spectrum every 15 min. No reworded pitch or problem line was recommended, so `project.yaml` and `README.md` keep the existing wording. `budget_usd` stays $80.
 
 ### Still awaiting Amish
 
 1. **O1, co-design partner** for the alerts and dashboard. No recommendation was made. Proposed, awaiting Amish.
 2. **O2, R4 with one CT.** Options: (a) accept R4 as at risk with the power factor curve (8.5 % RSS); (b) relax R4 to "relative energy trend"; (c) add a voltage reference ($10, total $90.00, over budget). The TRL 2 note offered (a) or (b) without choosing, so no option is adopted. Proposed, awaiting Amish.
-3. **New, magnets for hot frames (R12).** Options: (a) keep N-grade magnets and state the frame limit as 80 °C with no margin; (b) high-temperature pot magnets rated 120 °C or more, about $1.00 more for the pair, total $81.00, over the $80 budget. Recommendation: (b), because the magnets sit within 2 K of the frame. Not applied; `budget_usd` unchanged.
-4. **New, R8 range.** Recommendation: state R8 as within 2 °C from 0 to 85 °C, and within 4 °C from 85 to 100 °C. Not applied.
-5. **New, R5 and R3 follow-up.** Recommendation: keep both targets, record the mount resonance and the ADC residual as the first things to measure at TRL 4, and consider a flat steel saddle for curved frames. Not applied.
+3. **New, magnets for hot frames (R12).** Options: (a) keep N-grade magnets and state the frame limit as 80 °C with no margin; (b) high-temperature pot magnets rated 120 °C or more, about $1.00 more for the pair, total $81.00, over the $80 budget. Recommendation: (b), because the magnets sit within 2 K of the frame. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002, N1); applied, `budget_usd` now 81.
+4. **New, R8 range.** Recommendation: state R8 as within 2 °C from 0 to 85 °C, and within 4 °C from 85 to 100 °C. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002, N2); applied in MPL-REQ-001 v0.4.
+5. **New, R5 and R3 follow-up.** Recommendation: keep both targets, record the mount resonance and the ADC residual as the first things to measure at TRL 4, and consider a flat steel saddle for curved frames. **Decided by Amish, 2026-09-25: go with recommendation** (MPL-DDR-002, N3); targets kept, measurements and saddle are TRL 4 work, on hold.
 
 ### Cross-repo consistency
 
@@ -126,3 +126,43 @@ Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for 
 ### Recommended next step
 
 TRL 4 is on hold by Amish's instruction; this repo stops at TRL 3. Amish's review is needed on O1, O2 and new items 3 to 5 above. For the record only, TRL 4 would need: a bench build of one pod; a lab test report (TST, `environment: lab`) covering CT accuracy against a clamp meter across the range, energy against a reference meter, mounted resonance and noise on flat and curved painted steel, magnet pull and slip, probe error against a thermocouple, pod temperatures on a hot plate at 80 °C, and power and data volume over a sustained run; and build log entries. None of this has been started.
+
+## Session 2026-09-25: recommendations accepted
+
+On 2026-09-25 Amish wrote: "i accept all your recommendations, go with them across all repos." Every item in this note and in MPL-DDR-001 that carried a recommendation is now **Decided by Amish, 2026-09-25: go with recommendation**. The record is `docs/decisions/0002-recommendations-accepted.md` (MPL-DDR-002 v0.1).
+
+### Decisions applied and what changed
+
+- **D1 to D10 (MPL-DDR-001):** radio, power, accelerometer, one CT, baseline alerts, data home, enclosure with stand-offs, pilot site type, budget and data schedule. Wording changed from "adopted for TRL 3, open for review" to decided; no design change. D9 ("no budget change") is superseded in effect by N1.
+- **N1, high-temperature magnets (R12):** BOM line 6 from $3.50 to $4.00 each (a 120 °C grade); parts from $80.00 to $81.00; `budget_usd` from 80 to 81; `mag_t_max` = 120 °C added to `cad/src/model.py` (geometry unchanged) and STEP and STL re-exported; MPL-DWG-001 from Rev P1 to Rev P2 (magnet note); hot-frame limit from 81.3 °C (magnets) to 109.6 °C (accelerometer); R12 from at risk to met by calculation.
+- **N2, R8 range:** target from "within 2 °C, 0 to 100 °C" to "within 2 °C from 0 to 85 °C, within 4 °C from 85 to 100 °C"; 1.69 K at 85 °C and 3.59 K at 100 °C, so R8 moves from at risk to met by calculation.
+- **N3, R3 and R5:** targets kept; ADC residual and mount resonance are the first TRL 4 measurements, and a flat steel saddle is the option to consider then. Decided but on hold.
+- Documents revised: MPL-PRB-001 v0.4, MPL-PRC-001 v0.4, MPL-REQ-001 v0.4, MPL-CAL-001 v0.2 (script rerun, results match), MPL-DDR-001 v0.2, new MPL-DDR-002 v0.1; `bom/bom.csv`, `bom/bom-notes.md`, `project.yaml`, `README.md`. Concept media, the GA sheet and all PDFs were regenerated, which also removes the old site address from generated files.
+- `README.md`: "What sparked the idea" rewritten around the Toyoda Type G automatic loom (1924) and its auto-stop devices, the origin of jidoka; the reference to how the project was chosen is removed.
+
+### Requirement status now (MPL-CAL-001 v0.2)
+
+1 not met, 4 at risk, 9 met by calculation, 3 met by design (was 1, 6, 7, 3).
+
+| ID | Status | Key number |
+| --- | --- | --- |
+| R10 Install without opening live enclosures | **Not met** | CT needs a single insulated conductor, often inside a terminal box |
+| R3 Current | At risk | 7.0 % worst case at 10 % of range |
+| R4 Energy | At risk | 8.5 % RSS, 16.0 % worst case |
+| R5 Vibration band | At risk | Mount resonance about 927 Hz on a curved frame |
+| R16 Cost | At risk | $81.00 against $81, no margin |
+| R1, R2, R6, R7, R8, R9, R11, R12, R15 | Met by calculation | R8 3.59 K at 100 °C against 4 °C; R12 limit 109.6 °C frame |
+| R13, R14, R17 | Met by design | |
+
+### Still awaiting Amish
+
+1. **O1, co-design partner** for alerts and dashboard. No recommendation. Proposed, awaiting Amish.
+2. **O2, R4 with one CT.** Accept at risk, relax to a relative energy trend, or add a voltage reference (parts $91.00). No single option was recommended. Proposed, awaiting Amish.
+
+### Cross-repo actions
+
+None. The decisions change no interface with TwinKit, FieldNode or CalRig.
+
+### TRL 4
+
+TRL 4 remains on hold by Amish's instruction. `trl: 3` and `trl_target: 3` are unchanged. No build, test, pilot, purchasing, PCB or firmware work was started.

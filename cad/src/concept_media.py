@@ -32,7 +32,7 @@ render_all(
                  "Split-core CT on one phase, 5 to 60 A voltage-output variants",
                  "Vibration 10 to 1,000 Hz velocity RMS, noise 0.037 mm/s",
                  "Summary every 60 s, about 1.15 MB/day; 0.42 W from 5 V USB",
-                 "$80.00 in parts (indicative), MPL-CAL-001"],
+                 "$81.00 in parts (indicative), MPL-CAL-001"],
     scale_figure=False, context=context,
     cut_exclude=("Split-core current transformer", "Surface temperature probe"),
     flow={"title": "data flow (estimates, MPL-CAL-001)", "unit": "",

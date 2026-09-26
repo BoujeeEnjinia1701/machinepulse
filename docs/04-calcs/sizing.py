@@ -1,4 +1,4 @@
-"""MachinePulse sizing calculations, MPL-CAL-001 v0.1 (TRL 3).
+"""MachinePulse sizing calculations, MPL-CAL-001 v0.2 (TRL 3).
 
 Run from the repo root:  python docs/04-calcs/sizing.py
 Prints every number quoted in docs/04-calcs/01-sizing.md. Each line carries a tag such as
@@ -67,7 +67,7 @@ T_AMB, T_FRAME = 40.0, 80.0
 cost_rows = list(csv.DictReader((ROOT / "bom" / "bom.csv").open()))
 budget = float(yaml.safe_load((ROOT / "project.yaml").read_text())["budget_usd"])
 
-print("MachinePulse sizing, MPL-CAL-001 v0.1")
+print("MachinePulse sizing, MPL-CAL-001 v0.2")
 print(f"Geometry from cad/src/model.py: box {P['box']} mm, block {P['block']} mm, magnets {P['mag_d']:.0f} mm at "
       f"{P['mag_pitch']:.0f} mm pitch, stand-offs {P['standoff_h']:.0f} mm, pod height {D['pod_h']:.0f} mm")
 
@@ -246,7 +246,8 @@ def solve(tf, ta, standoff, q=Q):
         tair = (G_flin * tfl + G_walls * ta + G_boss * tb + q) / (G_flin + G_walls + G_boss)
     return tb, tfl, tair
 
-T_ABS, T_MOD, LOCAL, T_ACC, T_MAG = 70.0, 85.0, 8.0, 105.0, 80.0
+T_ABS, T_MOD, LOCAL, T_ACC, T_MAG_N = 70.0, 85.0, 8.0, 105.0, 80.0
+T_MAG = P["mag_t_max"]       # high-temperature pot magnets (MPL-DDR-002 N1)
 tag("G1", f"conductances W/K: frame to block {G_fb:.3f}, block to air {G_ba:.3f}, block to floor direct {G_bfl(False):.3f}, "
           f"with {P['standoff_h']:.0f} mm stand-offs {G_bfl(True):.4f}, floor to inside air {G_flin:.3f}, walls and lid {G_walls:.3f}; heat inside {Q:.2f} W")
 for so in (False, True):
@@ -258,7 +259,8 @@ for so in (False, True):
         tf = tf10 / 10
         tb, tfl, tair = solve(tf, T_AMB, so)
         for key, bad in (("ABS floor 70 degC", tfl > T_ABS), ("module 85 degC", tair + LOCAL > T_MOD),
-                         ("accelerometer 105 degC", tb > T_ACC), ("N-grade magnets 80 degC", (tf + tb) / 2 > T_MAG)):
+                         ("accelerometer 105 degC", tb > T_ACC), ("N-grade magnets 80 degC", (tf + tb) / 2 > T_MAG_N),
+                         (f"high-temperature magnets {T_MAG:.0f} degC", (tf + tb) / 2 > T_MAG)):
             if bad and key not in lims:
                 lims[key] = tf - 0.1
     txt = ", ".join(f"{k} at {v:.1f}" for k, v in sorted(lims.items(), key=lambda kv: kv[1]))

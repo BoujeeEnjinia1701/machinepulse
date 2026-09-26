@@ -9,6 +9,7 @@ trl_evidence:
   - docs/02-concept.md
   - docs/03-requirements.md
   - docs/decisions/0001-trl2-review-decisions.md
+  - docs/decisions/0002-recommendations-accepted.md
   - docs/04-calcs/01-sizing.md
   - docs/04-calcs/sizing.py
   - cad/src/model.py
@@ -22,7 +23,7 @@ pitch: >-
   A clip-on monitor for older machines: current clamp, vibration and temperature sensors report run time, load and early fault signs from lathes, pumps and compressors that have no electronics of their own.
 problem: >-
   Small factories run machines that have no monitoring, so breakdowns arrive without warning and utilization is unknown.
-budget_usd: 80
+budget_usd: 81
 difficulty: 2  # 1 easiest, 5 hardest
 hero_image: media/hero.png
 licenses:

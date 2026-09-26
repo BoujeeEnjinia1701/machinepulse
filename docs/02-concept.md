@@ -3,7 +3,7 @@ doc_id: MPL-PRC-001
 title: MachinePulse design precis
 project: MachinePulse
 doc_type: Design precis
-version: "0.3"
+version: "0.4"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -21,13 +21,17 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: TRL 3 update; design choices adopted per MPL-DDR-001; numbers from MPL-CAL-001; stand-offs, CT clamp, 1.50 V bias, +-16 g range, module variant and 3 mm pads added; GA drawing MPL-DWG-001
+- version: "0.4"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # MachinePulse design precis
 
 ## Summary
 
-MachinePulse is a small magnetic pod that clips onto an old machine's motor frame, plus a split-core current transformer (CT) on one phase conductor and a surface temperature probe. Every minute it reports run state, run time, load current, vibration velocity and frame temperature to a TwinKit gateway or any MQTT broker on the shop network, and every 15 minutes it sends a vibration spectrum. The TRL 3 calculation note MPL-CAL-001 finds that stock modules, a hand-made aluminium sensor block and a stock box meet ten of the seventeen requirements for $80.00 in parts, exactly the budget. One requirement is not met: fitting the CT without opening a live enclosure on many machines (R10). Six are at risk: current accuracy at the bottom of the CT range (R3), energy per shift (R4), the magnet mount's resonance inside the vibration band (R5), probe accuracy above 85 °C (R8), the standard magnets' 80 °C limit (R12) and the zero cost margin (R16). The design choices below were adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction and remain open for his review (MPL-DDR-001).
+MachinePulse is a small magnetic pod that clips onto an old machine's motor frame, plus a split-core current transformer (CT) on one phase conductor and a surface temperature probe. Every minute it reports run state, run time, load current, vibration velocity and frame temperature to a TwinKit gateway or any MQTT broker on the shop network, and every 15 minutes it sends a vibration spectrum. The TRL 3 calculation note MPL-CAL-001 finds that stock modules, a hand-made aluminium sensor block and a stock box meet twelve of the seventeen requirements for $81.00 in parts, exactly the budget. One requirement is not met: fitting the CT without opening a live enclosure on many machines (R10). Four are at risk: current accuracy at the bottom of the CT range (R3), energy per shift (R4), the magnet mount's resonance inside the vibration band (R5) and the zero cost margin (R16). The design choices below were decided by Amish on 2026-09-25, going with the recommendations (MPL-DDR-001 and MPL-DDR-002). That decision added high-temperature pot magnets rated 120 °C, which clear hot frames to about 110 °C, and raised the budget from $80 to $81 to pay for them.
 
 ![Hero render](../media/hero.png)
 
@@ -56,7 +60,7 @@ Table 1. Main components. Numbers match the BOM and Figure 3.
 | 3 | Controller | ESP32-S3 module board, 8 MB flash, no octal PSRAM, USB-C, Wi-Fi and BLE | Module rated to 85 °C; PSRAM variants are rated to 65 °C (D1) |
 | 4 | Accelerometer | IIS3DWB-class 3-axis MEMS on an 18 x 18 mm adapter board, ±16 g | ADXL345-class fallback misses R6 (D3) |
 | 5 | Sensor block | 76 x 36 x 10 mm aluminium with a 20 mm round boss 11 mm high through the box floor | Carries magnets and sensor; stiff path to the frame |
-| 6 | Magnets | Two 32 mm neodymium pot magnets with M6 studs, 40 mm apart | Standard grade limits hot frames to about 81 °C (R12) |
+| 6 | Magnets | Two 32 mm high-temperature neodymium pot magnets, rated 120 °C, with M6 studs, 40 mm apart | Standard 80 °C grade would limit hot frames to about 81 °C; the 120 °C grade meets R12 (MPL-DDR-002, N1) |
 | 7 | Interface board | Perfboard with 1.50 V CT bias and filter, series resistor and clamp diodes, 3.5 mm jack, probe connector, LED, button | No custom PCB for the first build |
 | 8 | Current transformer | SCT-013 family, voltage output, 13 mm aperture, 5 to 60 A chosen per machine (30 A for the design case) | Voltage output has an internal burden, so it is never open-circuited (D4) |
 | 9 | Temperature probe | DS18B20 in stainless sleeve, magnetic clip, thermal pad | |
@@ -72,7 +76,7 @@ Figure 3. Exploded view with BOM numbers.
 
 Figure 4. Cutaway through the accelerometer: the sensor sits on the boss of the aluminium block, which sits on the magnets; the box stands 5 mm clear of the block on nylon stand-offs and carries no vibration path.
 
-The general arrangement drawing [MPL-DWG-001](../cad/drawings/MPL-DWG-001.pdf) (Rev P1, 1:1) gives the main dimensions: pod 100 x 68 x 63 mm high from the magnet face, 132 mm over the glands.
+The general arrangement drawing [MPL-DWG-001](../cad/drawings/MPL-DWG-001.pdf) (Rev P2, 1:1) gives the main dimensions: pod 100 x 68 x 63 mm high from the magnet face, 132 mm over the glands.
 
 ## Key numbers
 
@@ -90,21 +94,22 @@ Table 2. Key numbers.
 | Magnet mount resonance | About 927 Hz on a painted curved frame, 1,853 Hz flat | R5 at risk |
 | Pod mass | About 0.30 kg | |
 | Magnet holding | Slip margin 3.3 on a painted curved frame; pull-off 13.2 | R11 met |
-| Probe error | 1.56 K at 80 °C; about 3.6 K at 100 °C | R8 at risk |
-| Hot frame, 40 °C air | Floor 53.9 °C and module about 58.9 °C at an 80 °C frame; magnets reach 80 °C at an 81.3 °C frame | R12 at risk |
+| Probe error | 1.56 K at 80 °C, 1.69 K at 85 °C; 3.59 K at 100 °C | R8 met (restated target) |
+| Hot frame, 40 °C air | Floor 53.9 °C and module about 58.9 °C at an 80 °C frame; accelerometer limit at a 109.6 °C frame, 120 °C magnets at 122.7 °C | R12 met |
 | Power | 0.42 W from 5 V; 0.61 W and 5.3 kWh a year at the wall | |
 | Data | 1.15 MB per day; worst delivery 66 s | R9 met |
 | Offline store | 13.9 days of summaries | R15 met |
-| Parts cost | $80.00 against $80 | R16 at risk |
+| Parts cost | $81.00 against $81 | R16 at risk |
 
 ## Key design choices
 
-These choices were adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction and remain open for his review (MPL-DDR-001).
+Decided by Amish, 2026-09-25: go with recommendation (MPL-DDR-001, MPL-DDR-002).
 
 - **Stiff sensor path, plastic box for protection only (D7).** The accelerometer sits on the aluminium block's boss above a magnet, and the block sits on the magnets. The box rides on four nylon stand-offs 5 mm above the block, which keeps its floor 13 K cooler on a hot frame. The mount still resonates inside the upper vibration band on curved frames (R5).
 - **Features on the pod, spectra on a slow schedule (D10).** Summaries every minute and a spectrum every 15 minutes come to about 1.15 MB a day, so one gateway can serve many machines. Raw bursts can be captured on demand for diagnosis.
 - **One CT on one phase (D4).** Enough for run state, run hours and relative load, within budget. With a power factor curve the energy estimate is at risk rather than not met; a voltage reference or three CTs would cost $10 to $20 more.
 - **Wi-Fi first (D1).** Small workshops usually have Wi-Fi, and 7.4 kB spectra are far too large for a LoRaWAN duty cycle. A summaries-only LoRaWAN variant could reuse the FieldNode radio core later.
+- **High-temperature magnets (MPL-DDR-002, N1).** The magnets sit within about 2 K of the frame, so the standard 80 °C grade had no margin on an 80 °C frame. Pot magnets rated 120 °C cost about $1.00 more for the pair and move the pod's hot-frame limit to about 110 °C, set by the accelerometer.
 - **Mains-powered adapter, no battery (D2).** A certified 5 V adapter avoids lithium cells on a hot, vibrating frame.
 - **Baseline, not fixed limits (D5).** Old machines differ too much for fixed alarm levels to be useful at first. Each machine is compared with its own first week, by load band, and flags go to a person.
 - **Data stays local (D6).** MQTT to the TwinKit gateway, where the twin shows readings on the machine's model; any other broker works too.
@@ -131,7 +136,6 @@ MachinePulse is a monitoring aid. It is not a protective device, it must never b
 
 - R4 with one CT: accept "at risk", relax to a relative energy trend, or add a voltage reference. Awaiting Amish (MPL-DDR-001, O2).
 - Co-design partner for alerts and dashboard. Awaiting Amish (MPL-DDR-001, O1).
-- High-temperature magnets for hot frames (R12), and the R8 temperature range. Proposed in the review note, awaiting Amish.
-- Measured values for the assumptions MPL-CAL-001 rests on: ESP32-S3 ADC residual error, magnet contact stiffness and pull on painted frames. These need bench work, which belongs to TRL 4 and is on hold.
+- Measured values for the assumptions MPL-CAL-001 rests on: ESP32-S3 ADC residual error, magnet contact stiffness and pull on painted frames. Amish decided to keep the R3 and R5 targets and to measure the ADC residual and the mount resonance first, with a flat steel saddle for curved frames as the option to consider (MPL-DDR-002, N3). These need bench work, which belongs to TRL 4 and is on hold.
 
 Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html).

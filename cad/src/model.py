@@ -18,8 +18,9 @@ from pathlib import Path
 
 # Top-level parameters (mm). Edit these, not the geometry below.
 PARAMS = {
-    # 6 pot magnets: 32 mm neodymium pot magnets with M6 studs, spaced along X
-    "mag_d": 32.0, "mag_h": 8.0, "mag_pitch": 40.0,
+    # 6 pot magnets: 32 mm high-temperature neodymium pot magnets with M6 studs, spaced along X
+    # (rated 120 degC; MPL-DDR-002 N1 replaced the 80 degC standard grade)
+    "mag_d": 32.0, "mag_h": 8.0, "mag_pitch": 40.0, "mag_t_max": 120.0,
     # 5 aluminium sensor block and round boss (boss carries the accelerometer through the box floor)
     "block": (76.0, 36.0, 10.0), "boss_d": 20.0, "boss_x": -20.0,   # boss directly above magnet 1
     "boss_above_floor": 3.5,                                         # boss top above the inside floor

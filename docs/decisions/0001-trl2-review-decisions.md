@@ -3,7 +3,7 @@ doc_id: MPL-DDR-001
 title: MachinePulse TRL 2 review decisions
 project: MachinePulse
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
 date: '2026-09-25'
 author: Amish Chadha
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record the TRL 2 review items adopted for TRL 3 work under Amish's 2026-09-25 instruction, and the items that remain open
+- version: "0.2"
+  date: '2026-09-25'
+  author: Amish Chadha
+  change: Recommendations accepted by Amish (DDR-002)
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** proposed. The recommendations in items D1 to D10 are adopted for TRL 3 work pending Amish's review; items O1 and O2 remain "Proposed, awaiting Amish".
+- **Status:** accepted for D1 to D10. On 2026-09-25 Amish wrote "i accept all your recommendations, go with them across all repos", so items D1 to D10 are decided as recommended (see MPL-DDR-002). Items O1 and O2 carry no single recommendation and remain "Proposed, awaiting Amish".
 
 ## Context
 
@@ -30,20 +34,20 @@ The options for each item are those listed in `docs/REVIEW.md` (session 2026-09-
 
 ## Decision
 
-*Table 1. Items adopted for TRL 3 work.*
+*Table 1. Items decided by Amish on 2026-09-25 (first adopted for TRL 3 work, then accepted).*
 
 | # | Item | Adopted recommendation | Status |
 | --- | --- | --- | --- |
-| D1 | Radio | Wi-Fi on the ESP32-S3 first; a summaries-only LoRaWAN variant through the FieldNode radio core stays a later option | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D2 | Power | Certified 5 V USB adapter; no battery and no energy harvesting | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D3 | Accelerometer | IIS3DWB class, with the ADXL345 class kept as a documented fallback | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D4 | Current sensing | One CT on one phase, for single-phase and three-phase machines | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D5 | Alert logic | Baseline learned over the first week per load band; flags at twice baseline vibration or a temperature rise above baseline, sent to a person; fixed ISO 20816 zones a later option | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D6 | Data home | TwinKit gateway by default, any MQTT broker supported, no cloud dependency | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D7 | Enclosure | Stock IP54 ABS box for the first build, with a stand-off or insulating pad studied at TRL 3 for hot frames | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D8 | Pilot site | A makerspace or university workshop with a lathe and a compressor | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D9 | Budget | No change: `budget_usd` stays $80 | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
-| D10 | Data schedule | Features computed on the pod every minute, a spectrum every 15 min, raw bursts on demand | Adopted as recommended for TRL 3 under Amish's 2026-09-25 instruction, open for his review |
+| D1 | Radio | Wi-Fi on the ESP32-S3 first; a summaries-only LoRaWAN variant through the FieldNode radio core stays a later option | Decided by Amish, 2026-09-25: go with recommendation |
+| D2 | Power | Certified 5 V USB adapter; no battery and no energy harvesting | Decided by Amish, 2026-09-25: go with recommendation |
+| D3 | Accelerometer | IIS3DWB class, with the ADXL345 class kept as a documented fallback | Decided by Amish, 2026-09-25: go with recommendation |
+| D4 | Current sensing | One CT on one phase, for single-phase and three-phase machines | Decided by Amish, 2026-09-25: go with recommendation |
+| D5 | Alert logic | Baseline learned over the first week per load band; flags at twice baseline vibration or a temperature rise above baseline, sent to a person; fixed ISO 20816 zones a later option | Decided by Amish, 2026-09-25: go with recommendation |
+| D6 | Data home | TwinKit gateway by default, any MQTT broker supported, no cloud dependency | Decided by Amish, 2026-09-25: go with recommendation |
+| D7 | Enclosure | Stock IP54 ABS box for the first build, with a stand-off or insulating pad studied at TRL 3 for hot frames | Decided by Amish, 2026-09-25: go with recommendation |
+| D8 | Pilot site | A makerspace or university workshop with a lathe and a compressor | Decided by Amish, 2026-09-25: go with recommendation |
+| D9 | Budget | No change: `budget_usd` stays $80. Superseded in effect by MPL-DDR-002, N1, which raises it to $81 for high-temperature magnets | Decided by Amish, 2026-09-25: go with recommendation |
+| D10 | Data schedule | Features computed on the pod every minute, a spectrum every 15 min, raw bursts on demand | Decided by Amish, 2026-09-25: go with recommendation |
 
 *Table 2. Items that remain open.*
 
@@ -54,9 +58,9 @@ The options for each item are those listed in `docs/REVIEW.md` (session 2026-09-
 
 ## Consequences
 
-- `project.yaml`: only the TRL fields change. No budget change was recommended (D9), and no reworded pitch or problem line was recommended, so `budget_usd`, `pitch` and `problem` and the matching lines in `README.md` keep their wording.
+- `project.yaml`: only the TRL fields change. No budget change was recommended (D9), and no reworded pitch or problem line was recommended, so `budget_usd`, `pitch` and `problem` and the matching lines in `README.md` keep their wording. MPL-DDR-002 later raised `budget_usd` to $81.
 - MPL-PRB-001, MPL-PRC-001 and MPL-REQ-001 are revised to v0.3. The key design choices in the precis are no longer "proposed". No requirement target changes as a result of these decisions; R4 stays at 10 % pending O2.
 - D7 study result (MPL-CAL-001, section G): 5 mm nylon stand-offs between the sensor block and the box floor keep the floor at 53.9 °C on an 80 °C frame, against 67.2 °C without them. They are added to the design and the BOM (line 13, $1.00), which brings the parts to $80.00, exactly the budget.
 - Other details added within these decisions by the calculations: a CT bias of 1.50 V, clamp diodes on the CT input, a ±16 g accelerometer range, a module without octal PSRAM, 3 mm steel pads, a silicone boot round the boss and a load-dependent power factor curve in the gateway software.
-- New proposals from MPL-CAL-001 (high-temperature magnets, R8 range, R3 and R5 follow-up) are listed in `docs/REVIEW.md` as "Proposed, awaiting Amish"; this record does not decide them.
+- New proposals from MPL-CAL-001 (high-temperature magnets, R8 range, R3 and R5 follow-up) were decided by Amish on 2026-09-25 and are recorded in MPL-DDR-002.
 - TRL 4 is on hold by Amish's instruction. Nothing in this record authorizes building or testing.

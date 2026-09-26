@@ -2,7 +2,7 @@
 
 ![TRL 3](https://img.shields.io/badge/TRL-3%20of%209-0F766E) ![Hardware: CERN-OHL-S-2.0](https://img.shields.io/badge/hardware-CERN--OHL--S--2.0-111827) ![Software: MIT](https://img.shields.io/badge/software-MIT-111827)
 
-**Area:** Automation · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $80 USD · **Difficulty:** 2 of 5
+**Area:** Automation · **TRL:** 3 of 9 (proof of concept on paper) · **Prototype budget:** about $81 USD · **Difficulty:** 2 of 5
 
 A clip-on monitor for older machines: current clamp, vibration and temperature sensors report run time, load and early fault signs from lathes, pumps and compressors that have no electronics of their own.
 
@@ -20,7 +20,7 @@ It is open and garage-buildable because the owners who most need it run small sh
 
 Unplanned stops are expensive, and reactive maintenance makes them more likely. A NIST study of US discrete manufacturing estimated $119.1 billion of losses in 2016 from inadequate maintenance, and found that establishments relying most on reactive maintenance had 3.3 times more downtime and 16 times more defects than those relying on it least ([Thomas and Weiss, NIST, 2020](https://nvlpubs.nist.gov/nistpubs/ams/NIST.AMS.100-34.pdf)). Electric motor-driven systems, the machines MachinePulse watches, account for more than 40 % of global electricity consumption ([IEA](https://www.iea.org/reports/energy-efficiency-policy-opportunities-for-electric-motor-driven-systems)), so knowing when they run and how hard also matters for energy use.
 
-The firms with the least monitoring are the most numerous. Small and medium enterprises are about 90 % of businesses and more than half of employment worldwide ([World Bank](https://www.worldbank.org/en/topic/smefinance)). Condition monitoring products are built and priced for large plants; a monitor costed at $80.00 in parts per machine brings the same early warning within reach of a small shop.
+The firms with the least monitoring are the most numerous. Small and medium enterprises are about 90 % of businesses and more than half of employment worldwide ([World Bank](https://www.worldbank.org/en/topic/smefinance)). Condition monitoring products are built and priced for large plants; a monitor costed at $81.00 in parts per machine brings the same early warning within reach of a small shop.
 
 ## Where it could be used
 
@@ -47,7 +47,7 @@ The firms with the least monitoring are the most numerous. Small and medium ente
 
 ## What sparked the idea
 
-It came out of a September 2026 review of Design Molecule's applied research areas against the open projects already in the lab. It extends automation into industrial monitoring and feeds TwinKit. The practical trigger was that low-cost MEMS accelerometers made for vibration monitoring, such as ST's IIS3DWB, now offer a flat response from dc to 6 kHz ([ST](https://www.st.com/en/mems-and-sensors/iis3dwb.html)), while NIST's work shows how much reactive maintenance still costs manufacturers ([NIST, 2020](https://nvlpubs.nist.gov/nistpubs/ams/NIST.AMS.100-34.pdf)).
+The idea traces back to a loom. In 1924 Sakichi Toyoda completed the Type G automatic loom, which carried weft-break and warp-break auto-stop devices so that a fault halted the machine instead of spoiling cloth, and which Platt Brothers engineers called "the magic loom" ([Toyota Industries](https://www.toyota-industries.com/company/history/toyoda_sakichi/)). Stopping a machine when something is irregular became the origin of jidoka in the Toyota Production System ([Toyota](https://www.toyota-global.com/company/history_of_toyota/75years/text/taking_on_the_automotive_business/chapter1/section1/item4.html)): a machine that makes its own abnormality visible, so one person can look after many. Most lathes, pumps and compressors in small shops never gained that sense. MachinePulse gives it back to them from the outside, with one difference: it never touches the controls, and only tells a person that a machine has changed so that they can decide what to do.
 
 ## Problem
 
@@ -57,7 +57,7 @@ Full problem statement: [docs/01-problem.md](docs/01-problem.md)
 
 ## Concept
 
-A magnetic pod on the motor frame carries a wideband accelerometer on an aluminium sensor block, an ESP32-S3 controller and an interface board, with the plastic box standing clear of the block on nylon stand-offs. A split-core current transformer on one phase conductor and a stainless temperature probe near a bearing plug into it. Every minute the pod reports run state, run time, load current, vibration velocity (10 to 1,000 Hz) and frame temperature over Wi-Fi to a TwinKit gateway or any MQTT broker, and every 15 minutes it sends a spectrum. The TRL 3 calculations (MPL-CAL-001) give a pod of 100 x 68 x 63 mm and about 0.30 kg, 0.42 W from a 5 V adapter, about 1.15 MB of data per day, a vibration noise floor of 0.037 mm/s and $80.00 in parts, exactly the budget. Not met: fitting the clamp without opening a live enclosure on many machines. At risk: current accuracy at the bottom of the clamp's range, energy per shift, the magnet mount's resonance near the top of the vibration band, probe accuracy above 85 °C, standard magnets on frames above about 80 °C, and the zero cost margin (see the review note).
+A magnetic pod on the motor frame carries a wideband accelerometer on an aluminium sensor block, an ESP32-S3 controller and an interface board, with the plastic box standing clear of the block on nylon stand-offs. A split-core current transformer on one phase conductor and a stainless temperature probe near a bearing plug into it. Every minute the pod reports run state, run time, load current, vibration velocity (10 to 1,000 Hz) and frame temperature over Wi-Fi to a TwinKit gateway or any MQTT broker, and every 15 minutes it sends a spectrum. The TRL 3 calculations (MPL-CAL-001) give a pod of 100 x 68 x 63 mm and about 0.30 kg, 0.42 W from a 5 V adapter, about 1.15 MB of data per day, a vibration noise floor of 0.037 mm/s and $81.00 in parts, exactly the budget. High-temperature magnets rated 120 °C let the pod work on frames up to about 110 °C. Not met: fitting the clamp without opening a live enclosure on many machines. At risk: current accuracy at the bottom of the clamp's range, energy per shift, the magnet mount's resonance near the top of the vibration band, and the zero cost margin (see the review note).
 
 Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [docs/03-requirements.md](docs/03-requirements.md)
 
@@ -67,7 +67,7 @@ Full design precis: [docs/02-concept.md](docs/02-concept.md) · Requirements: [d
 - Wideband MEMS vibration accelerometer (IIS3DWB class) on an aluminium sensor block
 - DS18B20 surface temperature probe in a magnetic clip
 - ESP32-S3 controller with Wi-Fi (LoRaWAN variant via FieldNode possible)
-- IP54 enclosure on nylon stand-offs over the sensor block, two 32 mm pot magnets, steel pads for aluminium frames
+- IP54 enclosure on nylon stand-offs over the sensor block, two 32 mm high-temperature pot magnets (rated 120 °C), steel pads for aluminium frames
 - Certified 5 V USB power adapter
 - TwinKit gateway or any MQTT broker (not in the BOM)
 
@@ -100,4 +100,4 @@ Controlled documents follow the portfolio [documentation standard](.kit/STANDARD
 - **Hardware** (CAD, drawings, BOM, electronics): [CERN-OHL-S v2](LICENSE)
 - **Software** (firmware, scripts, notebooks): [MIT](LICENSE-SOFTWARE)
 
-A project of the [Design Molecule](https://designmolecule.com) lab. Extending strong areas set.
+A project of the [Design Molecule](https://designmolecule.com) lab.
