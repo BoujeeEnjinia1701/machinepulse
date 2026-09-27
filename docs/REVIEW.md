@@ -173,3 +173,34 @@ TRL 4 remains on hold by Amish's instruction. `trl: 3` and `trl_target: 3` are u
 - README, India and European Union rows: uncited statements about machine age removed; each row now states only what its source supports.
 - All other README links (NIST, IEA, World Bank, PIB, IEA Africa Energy Outlook, ECLAC, Eurostat, Toyota Industries, Toyota) were fetched and confirmed to support their claims. "What sparked the idea" unchanged; it already rests on Toyota's own history pages.
 - No controlled document changed; no budget change.
+
+## Session 2026-09-26: product appearance model and photoreal renders
+
+Amish chose this repo for the first batch of product renders on 2026-09-26.
+
+### What was added
+
+- `cad/src/product_model.py`: an appearance model for photoreal renders. `product_parts()` returns 41 parts (26 shell, 9 internal, 3 accessory, 3 context) with colour, material class, BOM line, group and explode offset. It also defines `TITLE` and `RENDER_VIEWS` (hero on the motor, exploded, and a detail view of the hub and sensors without the motor).
+- Enclosure: two-tone stock box with filleted corners and edges, a parting-line groove at the lid joint, four lid screws in corner pockets, a lit status light pipe in a bezel (BOM 1 and 7), a silicone status button, and a printed lid label with the kit accent stripe.
+- Fluted M12 cable glands with seal inserts on both end walls (BOM 2).
+- Magnetic sensor base: filleted aluminium block and boss (BOM 5), M6 stud nut, high-temperature pot magnets with a pole groove (BOM 6), nylon stand-offs (BOM 13) and the silicone boot (BOM 12).
+- Internals: ESP32-S3 board with module shield, USB-C and antenna print (BOM 3), interface perfboard with jack, terminal block and capacitors (BOM 7), accelerometer adapter board (BOM 4), brass board spacers (BOM 12).
+- Current transformer: filleted ring and latch with the split-core seam, a latch finger recess, a "30 A : 1 V, VOLTAGE OUTPUT" marking and a cable strain relief (BOM 8).
+- Temperature probe: filleted magnetic clip, retaining strap, stainless sleeve with crimp ring and heat-shrink boot (BOM 9).
+- Accessories for the exploded view: the two steel adhesive pads (BOM 11) and the USB-C power adapter with its cable (BOM 10), neither of which model.py shows.
+- Context: the 7.5 kW class motor from `motor_context()` in clay, the insulated phase conductor through the clamp, and swept clamp, probe and USB leads.
+- `README.md`: hero image now points to `media/render-hero.png`, with a link to `media/render-exploded.png`. The render files are produced separately.
+
+### Differences from model.py
+
+Every main dimension and interface (box, lid and base heights, wall, glands, floor hole, block and boss, magnets, stand-offs, board positions, clamp and probe envelopes, installed positions) is taken from PARAMS and derived(). The following are appearance choices, each Proposed, awaiting Amish:
+
+1. **Status button on the lid.** BOM line 7 lists a button, but model.py shows no lid opening for it. The appearance model puts a 9 mm silicone button at pod coordinates (30, -4), next to the LED. Recommendation: keep it on the lid beside the LED so a user can wake or pair the pod without opening the box; confirm before the drawing shows it.
+2. **Two-tone enclosure.** Light grey lid on a dark grey base. A stock IP54 box is usually one colour. Recommendation: accept for the renders; buy a single-colour box and treat the two-tone scheme as a later option.
+3. **Separate vibration puck.** The render brief asked for a vibration sensor puck. In this design the accelerometer sits on the boss of the aluminium block inside the hub, so there is no separate puck; the magnetic sensor base under the hub plays that role. Recommendation: keep the design as it is (MPL-DDR-001 D7); the renders show the sensor base, not a puck.
+4. **Probe and USB leads share the probe-side gland**, as model.py already routes them; the model shows a two-hole seal insert. Recommendation: specify a multi-hole seal insert for that gland at TRL 4.
+5. **Lid label and clamp marking** are illustrative artwork, not a specified label.
+
+### Status
+
+This is an appearance model only: no tolerances, no fabrication detail, and no change to model.py, the BOM, the calculations or the drawing. `trl` stays 3 and TRL 4 remains on hold.

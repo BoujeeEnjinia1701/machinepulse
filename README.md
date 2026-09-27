@@ -6,9 +6,9 @@
 
 A clip-on monitor for older machines: current clamp, vibration and temperature sensors report run time, load and early fault signs from lathes, pumps and compressors that have no electronics of their own.
 
-![MachinePulse concept](media/hero.png)
+![MachinePulse: clip-on condition monitor for older machines, product render](media/render-hero.png)
 
-[Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement MPL-DWG-001 (PDF)](cad/drawings/MPL-DWG-001.pdf) · [Calculations MPL-CAL-001](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
+[Exploded render](media/render-exploded.png) · [Detail render](media/render-detail.png) · [Interactive 3D model](media/viewer.html) · [Concept blueprint (PDF)](media/concept-blueprint.pdf) · [General arrangement MPL-DWG-001 (PDF)](cad/drawings/MPL-DWG-001.pdf) · [Calculations MPL-CAL-001](docs/04-calcs/01-sizing.md) · [Review note](docs/REVIEW.md)
 
 ## Concept rationale
 
