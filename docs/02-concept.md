@@ -3,9 +3,9 @@ doc_id: MPL-PRC-001
 title: MachinePulse design precis
 project: MachinePulse
 doc_type: Design precis
-version: "0.4"
+version: "0.5"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -25,13 +25,17 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.5"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Constructable design (MPL-DDR-003); components, numbers and GA Rev P4 updated; budget treated as a value-engineering target
 ---
 
 # MachinePulse design precis
 
 ## Summary
 
-MachinePulse is a small magnetic pod that clips onto an old machine's motor frame, plus a split-core current transformer (CT) on one phase conductor and a surface temperature probe. Every minute it reports run state, run time, load current, vibration velocity and frame temperature to a TwinKit gateway or any MQTT broker on the shop network, and every 15 minutes it sends a vibration spectrum. The TRL 3 calculation note MPL-CAL-001 finds that stock modules, a hand-made aluminium sensor block and a stock box meet twelve of the seventeen requirements for $81.00 in parts, exactly the budget. One requirement is not met: fitting the CT without opening a live enclosure on many machines (R10). Four are at risk: current accuracy at the bottom of the CT range (R3), energy per shift (R4), the magnet mount's resonance inside the vibration band (R5) and the zero cost margin (R16). The design choices below were decided by Amish on 2026-09-25, going with the recommendations (MPL-DDR-001 and MPL-DDR-002). That decision added high-temperature pot magnets rated 120 °C, which clear hot frames to about 110 °C, and raised the budget from $80 to $81 to pay for them.
+MachinePulse is a small magnetic pod that clips onto an old machine's motor frame, plus a split-core current transformer (CT) on one phase conductor and a surface temperature probe. Every minute it reports run state, run time, load current, vibration velocity and frame temperature to a TwinKit gateway or any MQTT broker on the shop network, and every 15 minutes it sends a vibration spectrum. The TRL 3 calculation note MPL-CAL-001 finds that stock modules, a hand-made aluminium sensor block and a stock box meet twelve of the seventeen requirements. Value-engineering target: USD 81. Estimated cost of the constructable design: USD 83.50 (USD 2.50 over the target). One requirement is not met: fitting the CT without opening a live enclosure on many machines (R10). Three are at risk: current accuracy at the bottom of the CT range (R3), energy per shift (R4) and the magnet mount's resonance inside the vibration band (R5). Writing the prototype build plan (MPL-BLD-001) made the design constructable without changing what it does: the boss is a separate piece screwed to the block, the boards sit on one carrier on stand-offs, each lead has its own gland, a grommet seals the boss and a made clip holds the probe on the frame (MPL-DDR-003, open for Amish's review). The design choices below were decided by Amish on 2026-09-25, going with the recommendations (MPL-DDR-001 and MPL-DDR-002). That decision added high-temperature pot magnets rated 120 °C, which clear hot frames to about 110 °C, and raised the budget from $80 to $81 to pay for them.
 
 ![Hero render](../media/hero.png)
 
@@ -39,7 +43,7 @@ Figure 1. MachinePulse on a 7.5 kW class induction motor (grey, for scale), gene
 
 ## How it works
 
-1. **Sense current.** A voltage-output split-core CT (YHDC SCT-013 family, 5 to 60 A variants) clamps one insulated single-core phase conductor. The interface board biases its output at 1.50 V, so a full-range signal stays inside the ADC's linear window, and clamps the input against starting current. The pod samples at 2 kHz and computes RMS current every second.
+1. **Sense current.** A voltage-output split-core CT (YHDC SCT-013 family, 5 to 60 A variants) clamps one insulated single-core phase conductor. The carrier board's interface circuit biases its output at 1.50 V, so a full-range signal stays inside the ADC's linear window, and clamps the input against starting current. The pod samples at 2 kHz and computes RMS current every second.
 2. **Sense vibration.** A wideband MEMS accelerometer (IIS3DWB class, dc to 6 kHz, 75 µg/√Hz noise density, 1.1 mA ([ST](https://www.st.com/en/mems-and-sensors/iis3dwb.html))), set to ±16 g, sits on a 20 mm round boss of an aluminium sensor block, directly above one of two pot magnets. The magnets pull the block onto the frame, so vibration reaches the sensor through metal, not through the plastic box.
 3. **Sense temperature.** A DS18B20 probe in a stainless sleeve sits in a small magnetic clip with a thermal pad on the frame near a bearing.
 4. **Summarize on the pod.** Every 60 s the ESP32-S3 controller records a 4 s vibration burst, decimates it from 26.7 kHz to 3.33 kHz as it reads the sensor, and computes velocity RMS over 10 to 1,000 Hz (the ISO 20816-1 band ([ISO](https://www.iso.org/standard/63180.html))), acceleration RMS, crest factor and the amplitudes at 1x and 2x running speed. It adds run state, run seconds, mean and peak current, starts, and temperature.
@@ -56,17 +60,17 @@ Table 1. Main components. Numbers match the BOM and Figure 3.
 
 | # | Component | Choice | Notes |
 | --- | --- | --- | --- |
-| 1, 2 | Enclosure | Stock IP54 ABS box, 100 x 68 x 40 mm, two M12 IP68 cable glands, LED window, 24 mm hole for the boss | Stock box keeps cost low (D7) |
+| 1, 2 | Enclosure | Stock IP54 ABS box, 100 x 68 x 40 mm, with one M16 IP68 gland (CT) and two M12 IP68 glands (probe, power), a sealed light pipe and a 24 mm hole for the boss | Stock box keeps cost low (D7); one cable per gland (MPL-DDR-003) |
 | 3 | Controller | ESP32-S3 module board, 8 MB flash, no octal PSRAM, USB-C, Wi-Fi and BLE | Module rated to 85 °C; PSRAM variants are rated to 65 °C (D1) |
 | 4 | Accelerometer | IIS3DWB-class 3-axis MEMS on an 18 x 18 mm adapter board, ±16 g | ADXL345-class fallback misses R6 (D3) |
-| 5 | Sensor block | 76 x 36 x 10 mm aluminium with a 20 mm round boss 11 mm high through the box floor | Carries magnets and sensor; stiff path to the frame |
+| 5 | Sensor block and boss | 76 x 36 x 10 mm aluminium plate; a separate 20 mm round boss 11 mm high on an M6 set screw over magnet 1, through the box floor | Carries magnets and sensor; stiff path to the frame; no lathe needed (MPL-DDR-003) |
 | 6 | Magnets | Two 32 mm high-temperature neodymium pot magnets, rated 120 °C, with M6 studs, 40 mm apart | Standard 80 °C grade would limit hot frames to about 81 °C; the 120 °C grade meets R12 (MPL-DDR-002, N1) |
-| 7 | Interface board | Perfboard with 1.50 V CT bias and filter, series resistor and clamp diodes, 3.5 mm jack, probe connector, LED, button | No custom PCB for the first build |
+| 7 | Carrier board | Perfboard 45 x 56 mm on four stand-offs, with 1.50 V CT bias and filter, series resistor and clamp diodes, 3.5 mm jack, 5 V and probe terminals, LED, button and header sockets for the controller | No custom PCB for the first build |
 | 8 | Current transformer | SCT-013 family, voltage output, 13 mm aperture, 5 to 60 A chosen per machine (30 A for the design case) | Voltage output has an internal burden, so it is never open-circuited (D4) |
-| 9 | Temperature probe | DS18B20 in stainless sleeve, magnetic clip, thermal pad | |
+| 9, 14 | Temperature probe and clip | DS18B20 in stainless sleeve on a thermal pad, held against the frame by a made aluminium clip with two high-temperature disc magnets | The clip presses the sleeve on its pad (MPL-DDR-003) |
 | 10 | Power | Certified 5 V 1 A USB-C adapter and 2 m cable | Low voltage only in the pod (D2) |
 | 11 | Steel pads | 35 mm x 3 mm steel discs with epoxy, for aluminium frames | 3 mm keeps about 75 % of the pull |
-| 12, 13 | Hardware and stand-offs | Screws, silicone boot round the boss; four 6 x 5 mm nylon stand-offs | The stand-offs are the thermal break studied under D7 |
+| 12, 13 | Hardware and stand-offs | Screws, set screw, silicone grommet round the boss, carrier stand-offs; four 6 x 5 mm nylon stand-offs | The stand-offs are the thermal break studied under D7 |
 
 ![Exploded view](../media/exploded.png)
 
@@ -76,7 +80,7 @@ Figure 3. Exploded view with BOM numbers.
 
 Figure 4. Cutaway through the accelerometer: the sensor sits on the boss of the aluminium block, which sits on the magnets; the box stands 5 mm clear of the block on nylon stand-offs and carries no vibration path.
 
-The general arrangement drawing [MPL-DWG-001](../cad/drawings/MPL-DWG-001.pdf) (Rev P2, 1:1) gives the main dimensions: pod 100 x 68 x 63 mm high from the magnet face, 132 mm over the glands.
+The general arrangement drawing [MPL-DWG-001](../cad/drawings/MPL-DWG-001.pdf) (Rev P4, 1:1) gives the main dimensions: pod 100 x 68 x 63 mm high from the magnet face, 137 mm over the glands.
 
 ## Key numbers
 
@@ -91,15 +95,15 @@ Table 2. Key numbers.
 | Energy per shift | 8.5 % RSS with a power factor curve; 26 % with a fixed power factor | R4 at risk |
 | Velocity noise floor | 0.037 mm/s RMS, 10 to 1,000 Hz | R6 met |
 | Spectrum resolution | 0.407 Hz bins (8,192 points at 3,333 Hz) | R7 met |
-| Magnet mount resonance | About 927 Hz on a painted curved frame, 1,853 Hz flat | R5 at risk |
-| Pod mass | About 0.30 kg | |
-| Magnet holding | Slip margin 3.3 on a painted curved frame; pull-off 13.2 | R11 met |
+| Magnet mount resonance | About 892 Hz on a painted curved frame, 1,783 Hz flat | R5 at risk |
+| Pod mass | About 0.32 kg | |
+| Magnet holding | Slip margin 3.0 on a painted curved frame; pull-off 12.2 | R11 met |
 | Probe error | 1.56 K at 80 °C, 1.69 K at 85 °C; 3.59 K at 100 °C | R8 met (restated target) |
 | Hot frame, 40 °C air | Floor 53.9 °C and module about 58.9 °C at an 80 °C frame; accelerometer limit at a 109.6 °C frame, 120 °C magnets at 122.7 °C | R12 met |
 | Power | 0.42 W from 5 V; 0.61 W and 5.3 kWh a year at the wall | |
 | Data | 1.15 MB per day; worst delivery 66 s | R9 met |
 | Offline store | 13.9 days of summaries | R15 met |
-| Parts cost | $81.00 against $81 | R16 at risk |
+| Parts cost | $83.50 against an $81 value-engineering target | R16 $2.50 over the target |
 
 ## Key design choices
 

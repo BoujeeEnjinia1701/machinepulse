@@ -1,4 +1,4 @@
-"""MachinePulse general arrangement sheet MPL-DWG-001, Rev P3 (TRL 3).
+"""MachinePulse general arrangement sheet MPL-DWG-001, Rev P4 (TRL 3).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/MPL-DWG-001.svg, .pdf and .png from the parametric model in
@@ -71,12 +71,13 @@ def main():
     inst = Compound(children=[assembly(), motor_context(P)])
     views["iso"] = project_views(inst, work / "iso")["iso"]
     bb = pod.bounding_box()
-    s = Sheet(project="MachinePulse", title="General arrangement", dwg_no="MPL-DWG-001", rev="P3",
-              author="Amish Chadha", date=DATE, scale=1.0, theme="technical",
+    s = Sheet(project="MachinePulse", title="General arrangement", dwg_no="MPL-DWG-001", rev="P4",
+              author="Amish Chadha", date="2026-10-01", scale=1.0, theme="technical",
               material="ABS box, 6061 block, nylon stand-offs; bought-in parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
                          ("P2", "High-temperature magnets per MPL-DDR-002", DATE, "AC"),
-                         ("P3", "Layout and labels tidied", "2026-09-30", "AC")])
+                         ("P3", "Layout and labels tidied", "2026-09-30", "AC"),
+                         ("P4", "Constructable design per MPL-DDR-003: boss, glands, grommet, carrier board", "2026-10-01", "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -84,7 +85,8 @@ def main():
     bl, bw, bt = P["block"]
     L_ = []
 
-    gl = P["gland_len"]
+    gl = P["glands"]["probe"][5]
+    glc = P["glands"]["ct"][5]
     # front view (from -Y): X right, Z up
     x, y, w, h = c["front"]
     X = lambda mx: x + (mx - bb.min.X) * k
@@ -108,8 +110,9 @@ def main():
     ya = Yt(W / 2) - 3.5
     L_ += [ext(Xt(mx1), Yt(0), Xt(mx1), ya - 1), ext(Xt(mx2), Yt(0), Xt(mx2), ya - 1)]
     L_ += dim_h(Xt(mx1), Xt(mx2), ya, f"{P['mag_pitch']:.0f} magnet pitch")
-    L_ += leader(Xt(-L / 2 - gl / 2), Yt(0), Xt(-L / 2 - gl / 2), Yt(W / 2) - 13, "M12 GLAND: PROBE, USB")
-    L_ += leader(Xt(L / 2 + gl / 2), Yt(12), Xt(L / 2 + gl / 2), Yt(W / 2) - 13, "M12 GLAND: CT", "end")
+    gpy = P["glands"]["probe"][1]
+    L_ += leader(Xt(-L / 2 - gl / 2), Yt(gpy), Xt(-L / 2 - gl / 2), Yt(W / 2) - 13, "M12 GLANDS: PROBE, POWER")
+    L_ += leader(Xt(L / 2 + glc / 2), Yt(0), Xt(L / 2 + glc / 2), Yt(W / 2) - 13, "M16 GLAND: CT", "end")
 
     # right view (from +X): Y right, Z up
     x, y, w, h = c["right"]
@@ -130,11 +133,11 @@ def main():
     s.add_notes("Main dimensions and interfaces (mm)", [
         f"Pod {L:.0f} x {W:.0f} x {D['pod_h']:.0f} high from magnet face; {D['pod_len_glands']:.0f} over glands",
         f"Two D{P['mag_d']:.0f} pot magnets rated {P['mag_t_max']:.0f} °C, M6 studs, {P['mag_pitch']:.0f} pitch",
-        f"Block {bl:.0f} x {bw:.0f} x {bt:.0f} aluminium; boss D{P['boss_d']:.0f} x {D['boss_h']:.0f} through a D{P['floor_hole_d']:.0f} hole",
-        f"Four nylon stand-offs D{P['standoff_d']:.0f} x {P['standoff_h']:.0f}; silicone boot seals the boss",
-        f"IP54 ABS box, base {H - P['lid_h']:.0f} + lid {P['lid_h']:.0f}; boards on {P['board_standoff']:.0f} stand-offs",
+        f"Block {bl:.0f} x {bw:.0f} x {bt:.0f} plate; boss D{P['boss_d']:.0f} x {D['boss_h']:.0f} on an M6 set screw, through D{P['floor_hole_d']:.0f}",
+        f"Four nylon stand-offs D{P['standoff_d']:.0f} x {P['standoff_h']:.0f}; silicone grommet seals the boss",
+        f"IP54 ABS box, base {H - P['lid_h']:.0f} + lid {P['lid_h']:.0f}; carrier board on {P['board_standoff']:.0f} stand-offs",
         f"CT SCT-013 class, D{P['ct_aperture']:.0f} aperture, one insulated conductor",
-        "Probe: DS18B20 sleeve D6 in a magnetic clip near a bearing",
+        "Probe: DS18B20 sleeve D6 held on its pad by a made magnetic clip",
         "Power: certified 5 V USB adapter, 2 m lead; 0.42 W (MPL-CAL-001)",
         "Third-angle; front view from -Y; X along the motor shaft",
     ], x=276, y=150, width=146)

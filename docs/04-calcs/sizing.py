@@ -149,8 +149,8 @@ dec_kb = BURST_S * fs * 6 / 1000
 tag("D5", f"raw burst {raw_kb:.0f} kB at full rate does not fit the S3's 512 kB SRAM; decimating on the fly stores {dec_kb:.0f} kB; FFT buffer {NFFT * 8 / 1000:.0f} kB")
 
 # mass of the parts carried by the magnet contact, from model volumes
-dens = {1: 1.05, 2: 1.05, 5: 2.70, 6: 7.5, 12: 1.2, 13: 1.14}
-fixed_g = {3: 8.0, 4: 3.0, 7: 12.0}
+dens = {1: 1.05, 2: 1.05, 5: 2.70, 6: 7.5, 12: 2.5, 13: 1.14}   # 12: steel set screw, brass stand-offs, nylon screws, grommet
+fixed_g = {3: 8.0, 4: 3.0, 7: 16.0}   # 7: carrier perfboard with sockets, jack, terminals and light pipe (MPL-DDR-003)
 mass = 0.0
 for no, name, shape in pod_parts(P):
     g = fixed_g.get(no, shape.volume / 1000 * dens.get(no, 1.0))
@@ -292,5 +292,6 @@ tag("I5", "worst-case delivery: 60 s window + 2 s features + 3 s reconnect + 1 s
 # ------------------------------------------------------------------ J. Cost (R16)
 print("\nJ. Cost")
 total = sum(float(r["unit_cost_usd"]) * float(r["qty"]) for r in cost_rows)
-tag("J1", f"BOM {len(cost_rows)} lines, total ${total:.2f} against budget_usd ${budget:.0f}: margin ${budget - total:.2f}")
+tag("J1", f"BOM {len(cost_rows)} lines, estimated cost of the constructable design ${total:.2f}; value-engineering target (budget_usd) ${budget:.0f}: "
+          f"{'over' if total > budget else 'under'} the target by ${abs(total - budget):.2f}")
 tag("J2", f"a three-CT variant adds 2 x $10.00 = ${total + 20:.2f}; a voltage reference adds about $10 = ${total + 10:.2f}")

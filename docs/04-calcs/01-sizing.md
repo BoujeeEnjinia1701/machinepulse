@@ -3,9 +3,9 @@ doc_id: MPL-CAL-001
 title: MachinePulse sizing calculations
 project: MachinePulse
 doc_type: Calculation
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-01'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,11 +17,15 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-01'
+  author: Amish Chadha
+  change: Constructable design (MPL-DDR-003); mass, mount resonance, magnet margins and cost re-run; budget treated as a value-engineering target
 ---
 
 # MachinePulse sizing calculations
 
-On paper, MachinePulse meets twelve of its seventeen requirements (nine by calculation, three by design), has four at risk and misses one. Version 0.2 applies the decisions Amish made on 2026-09-25 (MPL-DDR-002): high-temperature pot magnets rated 120 °C replace the standard 80 °C grade, the budget rises from $80 to $81 to pay for them, and R8 is restated with a 4 °C tolerance from 85 to 100 °C. As a result R8 and R12 move from at risk to met by calculation. The miss is R10: on many machines the current transformer (CT) can only go round a single insulated conductor inside a terminal box or panel, which needs a qualified person and isolation. The four at risk are current accuracy at the bottom of the CT range (R3), energy per shift (R4), the magnet mount's resonance inside the vibration band (R5) and cost, which lands exactly on the $81 budget (R16). Several TRL 2 figures change. Data per day is about 1.15 MB, not 0.4 MB, because a full-resolution spectrum is 7.4 kB, not 1 kB. The magnet mount resonates at about 0.93 to 1.85 kHz rather than being usable to 2 kHz. Energy error with a fixed power factor is about 26 %, not 20 %; with a load-dependent power factor curve it falls to 8.5 % RSS. The box on its own would survive an 80 °C frame; the limit that TRL 2 put at 60 °C was set by the standard magnets at about 81 °C, not by the enclosure, and with the high-temperature magnets it moves to the accelerometer at about 110 °C. The calculations add four details within the adopted design: a CT bias of 1.50 V instead of 1.65 V, clamp diodes on the CT input, a ±16 g accelerometer range, and 5 mm nylon stand-offs between the sensor block and the box floor. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [D7], is the line of that script's output that carries it.
+On paper, MachinePulse meets twelve of its seventeen requirements (nine by calculation, three by design), has three at risk, misses one, and its estimated cost is over the value-engineering target. Version 0.3 re-runs the numbers for the constructable design of MPL-DDR-003 (a separate boss on a set screw, a carrier board on stand-offs, a third gland, a grommet, a light pipe and a made probe clip): the pod is 24 g heavier, so the mount resonance and the magnet margins fall slightly, the thermal results are unchanged, and the parts cost rises to $83.50, $2.50 over the $81 value-engineering target. Version 0.2 applied the decisions Amish made on 2026-09-25 (MPL-DDR-002): high-temperature pot magnets rated 120 °C replace the standard 80 °C grade, the budget rises from $80 to $81 to pay for them, and R8 is restated with a 4 °C tolerance from 85 to 100 °C. As a result R8 and R12 move from at risk to met by calculation. The miss is R10: on many machines the current transformer (CT) can only go round a single insulated conductor inside a terminal box or panel, which needs a qualified person and isolation. The three at risk are current accuracy at the bottom of the CT range (R3), energy per shift (R4) and the magnet mount's resonance inside the vibration band (R5). Cost (R16) is reported against the value-engineering target: $83.50 against $81, $2.50 over. Several TRL 2 figures change. Data per day is about 1.15 MB, not 0.4 MB, because a full-resolution spectrum is 7.4 kB, not 1 kB. The magnet mount resonates at about 0.89 to 1.78 kHz rather than being usable to 2 kHz. Energy error with a fixed power factor is about 26 %, not 20 %; with a load-dependent power factor curve it falls to 8.5 % RSS. The box on its own would survive an 80 °C frame; the limit that TRL 2 put at 60 °C was set by the standard magnets at about 81 °C, not by the enclosure, and with the high-temperature magnets it moves to the accelerometer at about 110 °C. The calculations add four details within the adopted design: a CT bias of 1.50 V instead of 1.65 V, clamp diodes on the CT input, a ±16 g accelerometer range, and 5 mm nylon stand-offs between the sensor block and the box floor. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [D7], is the line of that script's output that carries it.
 
 > **Safety:** These are first-principles estimates for a paper proof of concept. They are not a substitute for bench measurements, an electrical safety review of the CT installation or pull tests on real frames. See MPL-PRC-001, Safety.
 
@@ -85,13 +89,13 @@ Status terms used in Table 4: **met by calculation** (the estimate meets the tar
 - **Range and sampling.** Decimating the 26.7 kHz stream by eight gives 3,333 Hz with a 1,667 Hz Nyquist limit, and 13,333 samples per axis in a 4 s burst; quantization at ±16 g adds only 3.5 µg/√Hz [D2]. The ±2 g range assumed at TRL 2 would clip: 11 mm/s at 500 Hz is already 5.0 g peak [D3].
 - **Memory.** The raw burst at full rate is 640 kB and does not fit the ESP32-S3's 512 kB of internal SRAM; decimating as the FIFO is read keeps 80 kB, plus a 66 kB FFT buffer [D5].
 - **Resolution (R7).** An 8,192-point FFT at 3,333 Hz gives 0.407 Hz bins (0.61 Hz Hann noise bandwidth), against 0.5 Hz; the 1x line of a 1,450 rpm motor is at 24.17 Hz [D4]. R7 is met by calculation.
-- **Mount resonance (R5).** The pod weighs 295 g [D6], all carried by the two magnet contacts. On flat clean steel it resonates at about 1,853 Hz, so readings are 10 % high by 556 Hz; on a painted 130 mm radius frame it resonates at about 927 Hz, 10 % high by 278 Hz and 3 dB high by 500 Hz [D7]. The sensor covers the 10 to 1,000 Hz band, but the mount does not measure it flat. Overall velocity on most machines is dominated by running-speed components well below 278 Hz, so the effect on the ISO 20816 value is usually small; bearing and gear content near the top of the band will be overstated. R5 is at risk; under MPL-DDR-002 (N3) the target is kept, the mount resonance is the first thing to measure at TRL 4, and a flat steel saddle for curved frames is the option to consider then. The TRL 2 statement "usable to about 2 kHz" is withdrawn.
+- **Mount resonance (R5).** The constructable pod weighs 319 g [D6] (295 g in v0.2, before the carrier board, sockets, glands, pillars and fixings of MPL-DDR-003), all carried by the two magnet contacts. On flat clean steel it resonates at about 1,783 Hz, so readings are 10 % high by 535 Hz; on a painted 130 mm radius frame it resonates at about 892 Hz, 10 % high by 267 Hz and 3 dB high by 481 Hz [D7]. The sensor covers the 10 to 1,000 Hz band, but the mount does not measure it flat. Overall velocity on most machines is dominated by running-speed components well below 267 Hz, so the effect on the ISO 20816 value is usually small; bearing and gear content near the top of the band will be overstated. R5 is at risk; under MPL-DDR-002 (N3) the target is kept, the mount resonance is the first thing to measure at TRL 4, and a flat steel saddle for curved frames is the option to consider then. The TRL 2 statement "usable to about 2 kHz" is withdrawn.
 
 ## E. Magnet holding (R11)
 
-- **Pull.** Through 0.2 mm of paint a magnet keeps about 51 % of its rated pull on a flat frame and 33 % on a 130 mm radius frame, because the face touches only along a line [E1]. The pair gives 296 N flat and 191 N curved, against 14.5 N at 5 g [E2].
-- **Margins.** Pull-off margin is 13.2 on the curved frame. Slip governs: 0.25 friction gives a margin of 3.3 curved and 5.1 flat [E3]. At 80 °C the magnets lose about 7 % of their pull and the curved slip margin falls to 3.1 [G5]. Tipping across a curved frame, with the contact lever taken as a quarter of the magnet diameter, has a margin of 3.8 [E4]. R11 is met by calculation, with the pull-gap law and friction still to be checked by a pull test.
-- **Aluminium frames.** Steel pads 3 mm thick keep about 75 % of rated pull (435 N, slip margin 7.5) [E5]. Thin 1 mm pads would keep about 25 % (slip margin 2.5) [E6], so BOM line 11 now specifies 35 mm by 3 mm discs.
+- **Pull.** Through 0.2 mm of paint a magnet keeps about 51 % of its rated pull on a flat frame and 33 % on a 130 mm radius frame, because the face touches only along a line [E1]. The pair gives 296 N flat and 191 N curved, against 15.6 N at 5 g [E2].
+- **Margins.** Pull-off margin is 12.2 on the curved frame. Slip governs: 0.25 friction gives a margin of 3.0 curved and 4.7 flat [E3]. At 80 °C the magnets lose about 7 % of their pull and the curved slip margin falls to 2.8 [G5]. Tipping across a curved frame, with the contact lever taken as a quarter of the magnet diameter, has a margin of 3.5 [E4]. R11 is met by calculation, with the pull-gap law and friction still to be checked by a pull test.
+- **Aluminium frames.** Steel pads 3 mm thick keep about 75 % of rated pull (435 N, slip margin 7.0) [E5]. Thin 1 mm pads would keep about 25 % (slip margin 2.3) [E6], so BOM line 11 now specifies 35 mm by 3 mm discs.
 
 ## F. Surface temperature probe (R8)
 
@@ -128,7 +132,7 @@ Status terms used in Table 4: **met by calculation** (the estimate meets the tar
 
 ## J. Cost (R16)
 
-The 13-line BOM totals $81.00 against the $81 `budget_usd`, a margin of $0.00 [J1]. The stand-offs ($1.00) used the last dollar of the original $80 budget; the high-temperature magnets add $1.00 for the pair, and the budget was raised to $81 to match (MPL-DDR-002). A three-CT variant would cost $101.00 and a voltage reference $91.00 [J2]. Prices are indicative, not quotes, so R16 is at risk.
+Value-engineering target: USD 81 (`budget_usd`, a hypothetical control target, not a limit). Estimated cost of the constructable design: USD 83.50 (USD 2.50 over the target) from the 14-line BOM [J1]. Making the design constructable added $2.50: the third gland and the M16 gland ($0.50), the carrier board's sockets, terminals and light pipe ($1.00), the made probe clip with its magnets in place of a bought clip ($0.50 net) and the grommet, set screw and carrier fixings ($0.50) (MPL-DDR-003). A three-CT variant would cost $103.50 and a voltage reference $93.50 [J2]. Prices are indicative, not quotes. R16 is reported as over the value-engineering target by $2.50; the build stays hand tools, a drill press and perfboard, with no custom PCB.
 
 ## Results against every requirement
 
@@ -139,22 +143,22 @@ The 13-line BOM totals $81.00 against the $81 `budget_usd`, a margin of $0.00 [J
 | R10 | Install without opening live enclosures | Pod and probe in 10 min without tools; CT on an accessible insulated conductor | Pod and probe need no tools; the CT needs a single insulated conductor, often only inside a terminal box or panel | **Not met** |
 | R3 | Measure load current | Within 5 % of reading, 10 % to 100 % of range | RSS 3.6 % at 10 %, 2.1 % at 49 %; worst case 7.0 % at 10 % [B1] | At risk |
 | R4 | Estimate energy per shift | Within 10 % of a reference meter | 8.5 % RSS, 16.0 % worst case with a PF curve; 26 % with a fixed PF [C2, C4] | At risk |
-| R5 | Measure vibration | Velocity RMS, 10 to 1,000 Hz, three axes | Sensor covers the band; mount resonance 927 to 1,853 Hz, +10 % from 278 Hz on a curved frame [D7] | At risk |
-| R16 | Low cost and buildable | Parts $81 or less; hand tools; no custom PCB | $81.00, margin $0.00 [J1]; hand tools and perfboard | At risk |
+| R5 | Measure vibration | Velocity RMS, 10 to 1,000 Hz, three axes | Sensor covers the band; mount resonance 892 to 1,783 Hz, +10 % from 267 Hz on a curved frame [D7] | At risk |
+| R16 | Low cost and buildable | Parts against the $81 value-engineering target; hand tools; no custom PCB | $83.50, over the target by $2.50 [J1]; hand tools, drill press and perfboard | Over the value-engineering target |
 | R1 | Detect run state | Off, idle, running at 1 s resolution | 1 s RMS windows; 0.07 A zero reading against a 0.5 A threshold [B2, B3] | Met by calculation |
 | R2 | Log run time | Within 1 % over a week | 1.00 % worst case on 100 s runs, 0.17 % on 10 min runs [B4] | Met by calculation |
 | R6 | Low vibration noise floor | 0.1 mm/s RMS or better | 0.037 mm/s [D1] | Met by calculation |
 | R7 | Resolve running-speed peaks | 0.5 Hz bins or finer to 1 kHz | 0.407 Hz [D4] | Met by calculation |
 | R8 | Measure frame temperature | Within 2 °C to 85 °C; within 4 °C from 85 to 100 °C | 1.56 K at 80 °C, 1.69 K at 85 °C, 3.59 K at 100 °C [F1] | Met by calculation |
 | R9 | Report often enough | Summary each minute, spectrum each 15 min, within 2 min | 1.15 MB/day; 66 s worst delivery [I2, I5] | Met by calculation |
-| R11 | Stay attached | No slip at 5 g on a painted cast frame; aluminium option | Slip margin 3.3 (3.1 at 80 °C); 3 mm pads 7.5 [E3, E5, G5] | Met by calculation |
+| R11 | Stay attached | No slip at 5 g on a painted cast frame; aluminium option | Slip margin 3.0 (2.8 at 80 °C); 3 mm pads 7.0 [E3, E5, G5] | Met by calculation |
 | R12 | Tolerate hot frames | Frames up to 80 °C in 40 °C air | Box and module pass with stand-offs; 120 °C magnets reach their limit at a 122.7 °C frame; accelerometer limit at 109.6 °C [G3] | Met by calculation |
 | R15 | Store data when offline | 7 days of summaries | 13.9 days [I3] | Met by calculation |
-| R13 | Workshop protection | IP54 or better | IP54 box, IP68 glands, silicone boot round the boss | Met by design |
+| R13 | Workshop protection | IP54 or better | IP54 box, three IP68 glands (one cable each), silicone grommet round the boss, sealed light pipe | Met by design |
 | R14 | Keep data local | TwinKit or any MQTT broker; no cloud | MQTT on the local network | Met by design |
 | R17 | Safe by design | Low voltage in the pod; certified adapter; voltage-output CT; no link to controls | Unchanged; CT input now clamped [A6] | Met by design |
 
-Summary: 1 not met, 4 at risk, 9 met by calculation, 3 met by design, none left unverifiable at TRL 3. R13's IP rating and the at-risk items need bench evidence that belongs to TRL 4, which is on hold.
+Summary: 1 not met, 3 at risk, 9 met by calculation, 3 met by design, 1 (R16) reported against the value-engineering target, none left unverifiable at TRL 3. R13's IP rating and the at-risk items need bench evidence that belongs to TRL 4, which is on hold.
 
 ## Checks against the TRL 2 figures
 
@@ -162,14 +166,14 @@ Summary: 1 not met, 4 at risk, 9 met by calculation, 3 met by design, none left 
 
 | Quantity | TRL 2 | This note |
 | --- | --- | --- |
-| Pod size and mass | 100 x 68 x 58 mm, 0.35 kg | 100 x 68 x 63 mm (132 mm over glands), 0.30 kg [D6] |
+| Pod size and mass | 100 x 68 x 58 mm, 0.35 kg | 100 x 68 x 63 mm (137 mm over glands), 0.32 kg [D6] |
 | CT variants | 5 to 100 A | 5 to 60 A voltage output [A2] |
 | Current accuracy | About 3 % | 2.1 % RSS at the design point, 3.6 % at 10 % of range [B1] |
 | Energy accuracy | About 20 % | 26 % fixed PF; 8.5 % RSS with a PF curve [C2, C4] |
-| Magnet mount | Usable to about 2 kHz | Resonance 927 to 1,853 Hz [D7] |
-| Magnet margin | About 6 times | Pull-off 13.2, slip 3.3 [E3] |
+| Magnet mount | Usable to about 2 kHz | Resonance 892 to 1,783 Hz [D7] |
+| Magnet margin | About 6 times | Pull-off 12.2, slip 3.0 [E3] |
 | Data volume | About 0.4 MB/day | 1.15 MB/day [I2] |
 | Offline store | About 10 days | 13.9 days of summaries, 4.0 days with spectra [I3] |
 | Frame temperature limit | About 60 °C (box) | About 81 °C with N-grade magnets; 109.6 °C (accelerometer) with the 120 °C magnets [G3] |
 | Annual energy | About 4.4 kWh | 5.3 kWh at the wall [H2] |
-| Parts cost | About $79 | $81.00 [J1] |
+| Parts cost | About $79 | $83.50 against an $81 value-engineering target [J1] |

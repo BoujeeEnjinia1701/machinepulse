@@ -210,3 +210,50 @@ This is an appearance model only: no tolerances, no fabrication detail, and no c
 - Kit 1.5.0 synced: STANDARDS v1.5 (sections 12 to 15: product renders, storefront images and image quality, public release, authorship and signing), `.kit/cards.py`, `.kit/image_qc.py`, `.kit/release_gate.py`, issue templates, and the `/render-product` and `/release` commands. `CLAUDE.md` now matches `.kit/CLAUDE.md`.
 - Every `media/render-*.png` recaptioned from its original render with the new layout: the title, concept label and repository sit in a band above the render and the view note in a band below it, each line wrapped to the image width, so no text overlaps other text or the render or runs off the image. `media/card.png` and `media/social-preview.png` regenerated with the same rules.
 - `python .kit/image_qc.py` and `python .kit/release_gate.py` pass. trl stays 3.
+
+## Session 2026-10-01: design for construction and prototype build plan (kit 1.7.0)
+
+Amish approved the build plan format on 2026-09-30 and asked for it across all repos, with outstanding decisions kept in a separate register. This session installed kit 1.7.0, made the design constructable and wrote the illustrated build plan. No commit or push was made from this working copy.
+
+### What was done
+
+- Kit 1.7.0 installed (`.kit/`, `.claude/commands/`); `CLAUDE.md` now matches `.kit/CLAUDE.md`.
+- `cad/src/model.py`: constructable model with 25 components and a `--check` mode; 102 constructability checks (26 contacts, 21 clearances, 55 overlap tests) all pass. STEP and STL re-exported.
+- `docs/decisions/0003-design-for-construction.md` (MPL-DDR-003 v0.1, Draft): every change below, made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review.
+- `docs/05-build-plan.md` (MPL-BLD-001 v0.1) with `cad/src/build_plan_media.py`: overview, six making sketches (MPL-DWG-101 to 106), a drilling layout, seven joint close-ups, thirteen step pictures and a wiring diagram.
+- `docs/06-design-decisions.md` (MPL-DEC-001 v0.1): six open decisions, eight items to confirm when parts are bought, value engineering, and decisions made.
+- MPL-DWG-001 Rev P4; MPL-CAL-001 v0.3, MPL-REQ-001 v0.5, MPL-PRC-001 v0.5; `bom/bom.csv` (14 lines) and `bom/bom-notes.md`; concept media regenerated; `project.yaml` (`design_state: constructable`, evidence); README links line and "Building the prototype" section.
+
+### Design changes made for construction (MPL-DDR-003)
+
+1. Sensor block made as a 10 mm plate; the boss is a separate piece of 20 mm round bar on an M6 x 12 set screw over magnet 1, so no lathe or mill is needed.
+2. Magnet holes tapped M6 through; studs trimmed to 5 mm.
+3. Nylon stand-offs moved to 33 x 13 mm each side of centre and held by M3 nylon screws into the block (they were 0.6 mm from the floor hole and overlapped the boot).
+4. The floating boot replaced by a silicone grommet in the floor hole, gripping the boss.
+5. The two floating boards replaced by one 45 x 56 mm carrier perfboard on four M3 x 5 mm stand-offs, with the controller in header sockets.
+6. Three glands, one lead each (M16 for the CT, M12 for the probe and for power), centred 15.5 mm up so the nuts clear the floor and pillars; the power cable's far plug is cut off and wired to a 5 V terminal.
+7. The box's moulded corner pillars modelled and every clearance checked against them.
+8. The accelerometer bonded to the boss with rigid epoxy after the base is fitted (its board cannot pass the floor hole).
+9. A made probe clip (aluminium block, groove, two high-temperature disc magnets) holds the sleeve on its pad against the frame; the concept's sleeve sat 7 mm above the frame. New BOM line 14.
+10. A 3 mm light pipe takes the status LED through a sealed hole in the lid.
+
+### Key results
+
+- Pod 319 g (was 295 g); mount resonance 892 Hz curved, 1,783 Hz flat (was 927 and 1,853 Hz); slip margin 3.0 (2.8 at 80 °C); thermal results unchanged; 137 mm over the glands.
+- Requirement status: 1 not met (R10), 3 at risk (R3, R4, R5), 9 met by calculation, 3 met by design. R16: value-engineering target USD 81; estimated cost of the constructable design USD 83.50 (USD 2.50 over the target). `budget_usd` unchanged.
+
+### Proposed, awaiting Amish
+
+See the design decisions register: acceptance of MPL-DDR-003 (decision 1), the power entry (2), the status button position (3), plus the earlier open items R4 treatment (4), co-design partner (5) and enclosure colour (6).
+
+### Stale files to regenerate on Amish's Mac
+
+The design changed visibly (glands, boss, boards, probe clip), so these still show the concept: `media/render-hero.png`, `media/render-exploded.png`, `media/render-detail.png` (not present in this working copy), `media/card.png`, `media/social-preview.png`, and the appearance model `cad/src/product_model.py`, which still models the boot, two boards and two glands.
+
+### Safety concerns
+
+Unchanged: mains at the current transformer (qualified person, isolation, voltage-output only), moving machinery, hot frames and strong magnets. The build plan adds safety stops S1 to S5 and the epoxy and threadlocker precautions. The adapter stays a certified 5 V unit; cutting its cable's far plug does not change the safety case.
+
+### Recommended next step
+
+Amish to review MPL-DDR-003 and the register's open decisions. TRL 4 remains on hold; the build plan is ready for a bench build when it is lifted.
