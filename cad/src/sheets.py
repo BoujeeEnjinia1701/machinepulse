@@ -1,4 +1,4 @@
-"""MachinePulse general arrangement sheet MPL-DWG-001, Rev P2 (TRL 3).
+"""MachinePulse general arrangement sheet MPL-DWG-001, Rev P3 (TRL 3).
 
 Run from the repo root:  python cad/src/sheets.py
 Writes cad/drawings/MPL-DWG-001.svg, .pdf and .png from the parametric model in
@@ -22,12 +22,12 @@ DATE = "2026-09-25"
 def ortho_cells(sheet, views, names=("front", "top", "right")):
     """Repeat Sheet.add_ortho's layout arithmetic to find where each view lands (x, y, w, h)."""
     ax, ay, aw, ah = M + 10, M + 16, 245, TB_Y - M - 20
-    gap, lab = 14, 12
+    gap, lab, dl = 14, 12, 11
     dims = {n: _viewbox(Path(views[n]).read_text())[2:] for n in names}
     fw, fh = dims["front"]; tw, th = dims["top"]; rw, rh = dims["right"]
     k = sheet.scale
-    ax += (aw - (k * (max(fw, tw) + rw) + gap)) / 2
-    ay += (ah - (k * (th + max(fh, rh)) + gap + 2 * lab)) / 2
+    ax += (aw - (k * (max(fw, tw) + rw) + gap + dl)) / 2 + dl
+    ay += (ah - (k * (th + max(fh, rh)) + gap + 2 * lab + dl)) / 2 + dl
     colw = k * max(fw, tw)
     front_y = ay + k * th + lab + gap
     row_h = k * max(fh, rh)
@@ -71,11 +71,12 @@ def main():
     inst = Compound(children=[assembly(), motor_context(P)])
     views["iso"] = project_views(inst, work / "iso")["iso"]
     bb = pod.bounding_box()
-    s = Sheet(project="MachinePulse", title="General arrangement", dwg_no="MPL-DWG-001", rev="P2",
+    s = Sheet(project="MachinePulse", title="General arrangement", dwg_no="MPL-DWG-001", rev="P3",
               author="Amish Chadha", date=DATE, scale=1.0, theme="technical",
               material="ABS box, 6061 block, nylon stand-offs; bought-in parts per bom/bom.csv. PRELIMINARY, NOT FOR FABRICATION",
               revisions=[("P1", "Preliminary GA for TRL 3 (from cad/src/model.py)", DATE, "AC"),
-                         ("P2", "High-temperature magnets per MPL-DDR-002", DATE, "AC")])
+                         ("P2", "High-temperature magnets per MPL-DDR-002", DATE, "AC"),
+                         ("P3", "Layout and labels tidied", "2026-09-30", "AC")])
     s.add_ortho(views)
     k = s.scale
     c = ortho_cells(s, views)
@@ -96,25 +97,19 @@ def main():
     L_ += [ext(X(-bl / 2), Z(D["z_block0"]), xl - 7, Z(D["z_block0"])), ext(X(-bl / 2), Z(D["z_block1"]), xl - 7, Z(D["z_block1"]))]
     L_ += dim_v(xl - 6, Z(D["z_block1"]), Z(D["z_block0"]), f"{bt:.0f}")
     zt = bb.max.Z + 3
-    L_ += [ext(X(-L / 2 - gl), Z(D["z_box0"] + 14), X(-L / 2 - gl), Z(zt + 5) - 1),
-           ext(X(L / 2 + gl), Z(D["z_box0"] + 14), X(L / 2 + gl), Z(zt + 5) - 1),
-           ext(X(-L / 2), Z(D["z_top"]), X(-L / 2), Z(zt) - 1), ext(X(L / 2), Z(D["z_top"]), X(L / 2), Z(zt) - 1)]
+    L_ += [ext(X(-L / 2), Z(D["z_top"]), X(-L / 2), Z(zt) - 1), ext(X(L / 2), Z(D["z_top"]), X(L / 2), Z(zt) - 1)]
     L_ += dim_h(X(-L / 2), X(L / 2), Z(zt), f"{L:.0f} box")
-    L_ += dim_h(X(-L / 2 - gl), X(L / 2 + gl), Z(zt + 5), f"{D['pod_len_glands']:.0f} over glands")
 
     # top view (from +Z): X right, Y up the sheet
     x, y, w, h = c["top"]
     Xt = lambda mx: x + (mx - bb.min.X) * k
     Yt = lambda my: y + h - (my - bb.min.Y) * k
     mx1, mx2 = D["mag_x"]
-    ya = Yt(W / 2) - 6
+    ya = Yt(W / 2) - 3.5
     L_ += [ext(Xt(mx1), Yt(0), Xt(mx1), ya - 1), ext(Xt(mx2), Yt(0), Xt(mx2), ya - 1)]
     L_ += dim_h(Xt(mx1), Xt(mx2), ya, f"{P['mag_pitch']:.0f} magnet pitch")
-    xw = Xt(L / 2 + gl) + 5
-    L_ += [ext(Xt(L / 2), Yt(W / 2), xw + 1, Yt(W / 2)), ext(Xt(L / 2), Yt(-W / 2), xw + 1, Yt(-W / 2))]
-    L_ += dim_v(xw, Yt(W / 2), Yt(-W / 2), f"{W:.0f}", side=1)
-    L_ += leader(Xt(-L / 2 - gl / 2), Yt(0), Xt(-L / 2 - gl / 2), Yt(W / 2) - 6, "M12 GLAND: PROBE, USB")
-    L_ += leader(Xt(L / 2 + gl / 2), Yt(12), Xt(L / 2 + gl / 2), Yt(W / 2) - 6, "M12 GLAND: CT", "end")
+    L_ += leader(Xt(-L / 2 - gl / 2), Yt(0), Xt(-L / 2 - gl / 2), Yt(W / 2) - 13, "M12 GLAND: PROBE, USB")
+    L_ += leader(Xt(L / 2 + gl / 2), Yt(12), Xt(L / 2 + gl / 2), Yt(W / 2) - 13, "M12 GLAND: CT", "end")
 
     # right view (from +X): Y right, Z up
     x, y, w, h = c["right"]
@@ -126,11 +121,11 @@ def main():
                                          (0, D["z_block0"], f"{P['mag_h']:.0f}"))):
         xd = yr + 6 * i
         L_ += [ext(Yr(W / 2), Zr(z1), xd + 1, Zr(z1)), ext(Yr(W / 2), Zr(z2), xd + 1, Zr(z2))]
-        L_ += dim_v(xd, Zr(z2), Zr(z1), label, side=1)
-    L_ += leader(Yr(0), Zr(D["z_boss_top"]), yr + 4, Zr(bb.max.Z) - 10, f"ACCELEROMETER ON D{P['boss_d']:.0f} BOSS")
+        L_ += dim_v(xd, Zr(z2), Zr(z1), label)
+    L_ += leader(Yr(0), Zr(D["z_boss_top"]), Yr(0) + 4, Zr(bb.max.Z) - 8, f"ACCELEROMETER ON D{P['boss_d']:.0f} BOSS")
 
     s._layers += L_
-    s.add_svg(views["iso"], 276, 32, 140, 96, label="Isometric view, installed",
+    s.add_svg(views["iso"], 276, 37, 140, 92, label="Isometric view, installed",
               sublabel="Not to scale; motor grey context, not in the BOM")
     s.add_notes("Main dimensions and interfaces (mm)", [
         f"Pod {L:.0f} x {W:.0f} x {D['pod_h']:.0f} high from magnet face; {D['pod_len_glands']:.0f} over glands",
