@@ -3,9 +3,9 @@ doc_id: MPL-PRC-001
 title: MachinePulse design precis
 project: MachinePulse
 doc_type: Design precis
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,6 +29,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Constructable design (MPL-DDR-003); components, numbers and GA Rev P4 updated; budget treated as a value-engineering target
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Decisions of 2026-10-02 carried in: R4 as a relative energy trend with kWh as an estimate, co-design partner candidates'
 ---
 
 # MachinePulse design precis
@@ -48,7 +52,7 @@ Figure 1. MachinePulse on a 7.5 kW class induction motor (grey, for scale), gene
 3. **Sense temperature.** A DS18B20 probe in a stainless sleeve sits in a small magnetic clip with a thermal pad on the frame near a bearing.
 4. **Summarize on the pod.** Every 60 s the ESP32-S3 controller records a 4 s vibration burst, decimates it from 26.7 kHz to 3.33 kHz as it reads the sensor, and computes velocity RMS over 10 to 1,000 Hz (the ISO 20816-1 band ([ISO](https://www.iso.org/standard/63180.html))), acceleration RMS, crest factor and the amplitudes at 1x and 2x running speed. It adds run state, run seconds, mean and peak current, starts, and temperature.
 5. **Send and store.** The summary goes over Wi-Fi to an MQTT broker, by default on the TwinKit gateway. If the network is down, summaries queue in flash for about 14 days; spectra are kept only while space allows.
-6. **Compare with the machine's own baseline.** During the first week of running, the gateway software learns a baseline per load band. Afterward it flags a change, for example vibration velocity above twice its baseline or temperature rise above baseline at the same load, for a person to inspect. Energy per shift uses a power factor curve built from the nameplate and the measured no-load current.
+6. **Compare with the machine's own baseline.** During the first week of running, the gateway software learns a baseline per load band. Afterward it flags a change, for example vibration velocity above twice its baseline or temperature rise above baseline at the same load, for a person to inspect. Energy per shift uses a power factor curve built from the nameplate and the measured no-load current, and is shown as a relative trend against the machine's own baseline, with any kWh figure marked as an estimate (decided by Amish, 2026-10-02).
 
 ![Data flow](../media/flow.png)
 
@@ -92,7 +96,7 @@ Table 2. Key numbers.
 | --- | --- | --- |
 | Design motor full-load current | 14.6 A, 49 % of a 30 A CT | Sizes the CT |
 | Current accuracy | 2.1 % RSS at the design point; 3.6 % RSS and 7.0 % worst case at 10 % of range | R3 at risk |
-| Energy per shift | 8.5 % RSS with a power factor curve; 26 % with a fixed power factor | R4 at risk |
+| Energy per shift | 8.5 % RSS with a power factor curve; 26 % with a fixed power factor | R4 met by design as restated: a relative energy trend, kWh shown as an estimate |
 | Velocity noise floor | 0.037 mm/s RMS, 10 to 1,000 Hz | R6 met |
 | Spectrum resolution | 0.407 Hz bins (8,192 points at 3,333 Hz) | R7 met |
 | Magnet mount resonance | About 892 Hz on a painted curved frame, 1,783 Hz flat | R5 at risk |
@@ -111,7 +115,7 @@ Decided by Amish, 2026-09-25: go with recommendation (MPL-DDR-001, MPL-DDR-002).
 
 - **Stiff sensor path, plastic box for protection only (D7).** The accelerometer sits on the aluminium block's boss above a magnet, and the block sits on the magnets. The box rides on four nylon stand-offs 5 mm above the block, which keeps its floor 13 K cooler on a hot frame. The mount still resonates inside the upper vibration band on curved frames (R5).
 - **Features on the pod, spectra on a slow schedule (D10).** Summaries every minute and a spectrum every 15 minutes come to about 1.15 MB a day, so one gateway can serve many machines. Raw bursts can be captured on demand for diagnosis.
-- **One CT on one phase (D4).** Enough for run state, run hours and relative load, within budget. With a power factor curve the energy estimate is at risk rather than not met; a voltage reference or three CTs would cost $10 to $20 more.
+- **One CT on one phase (D4).** Enough for run state, run hours and relative load, within budget. With a power factor curve the energy estimate is at risk rather than not met; a voltage reference or three CTs would cost $10 to $20 more. Decided by Amish, 2026-10-02: R4 is a relative energy trend for the first build, and any kWh figure is reported as an estimate; the voltage reference stays an option for sites that need absolute energy.
 - **Wi-Fi first (D1).** Small workshops usually have Wi-Fi, and 7.4 kB spectra are far too large for a LoRaWAN duty cycle. A summaries-only LoRaWAN variant could reuse the FieldNode radio core later.
 - **High-temperature magnets (MPL-DDR-002, N1).** The magnets sit within about 2 K of the frame, so the standard 80 °C grade had no margin on an 80 °C frame. Pot magnets rated 120 °C cost about $1.00 more for the pair and move the pod's hot-frame limit to about 110 °C, set by the accelerometer.
 - **Mains-powered adapter, no battery (D2).** A certified 5 V adapter avoids lithium cells on a hot, vibrating frame.
@@ -138,8 +142,7 @@ MachinePulse is a monitoring aid. It is not a protective device, it must never b
 
 ## Open questions
 
-- R4 with one CT: accept "at risk", relax to a relative energy trend, or add a voltage reference. Awaiting Amish (MPL-DDR-001, O2).
-- Co-design partner for alerts and dashboard. Awaiting Amish (MPL-DDR-001, O1).
+- Co-design partner for alerts and dashboard (MPL-DDR-001, O1): the makerspace pilot already decided, with its shop lead deciding what "changed" should mean, and the maintenance person of one small production machine shop as a second voice (decided by Amish, 2026-10-02; the first candidates to approach, not agreed).
 - Measured values for the assumptions MPL-CAL-001 rests on: ESP32-S3 ADC residual error, magnet contact stiffness and pull on painted frames. Amish decided to keep the R3 and R5 targets and to measure the ADC residual and the mount resonance first, with a flat steel saddle for curved frames as the option to consider (MPL-DDR-002, N3). These need bench work, which belongs to TRL 4 and is on hold.
 
 Concept media: [blueprint sheet](../media/concept-blueprint.pdf), [interactive 3D model](../media/viewer.html).

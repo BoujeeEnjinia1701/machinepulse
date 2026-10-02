@@ -3,9 +3,9 @@ doc_id: MPL-REQ-001
 title: MachinePulse requirements
 project: MachinePulse
 doc_type: Requirements
-version: "0.5"
+version: "0.6"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -29,11 +29,15 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Status from MPL-CAL-001 v0.3 for the constructable design (MPL-DDR-003); R16 reported against the value-engineering target; targets unchanged
+- version: "0.6"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'R4 restated by Amish on 2026-10-02 as a relative energy trend per shift, kWh reported as an estimate; met by design as restated'
 ---
 
 # MachinePulse requirements
 
-These are the MachinePulse requirements with their status from the TRL 3 calculation note MPL-CAL-001 v0.3, which checks the constructable design of MPL-DDR-003. The design they are checked against follows the decisions Amish made on 2026-09-25 (MPL-DDR-001 and MPL-DDR-002): Wi-Fi, USB adapter, IIS3DWB-class sensor, one CT, baseline alerts, TwinKit or any broker, stock box with stand-offs and high-temperature magnets. Two targets change in v0.4 under MPL-DDR-002: R8 is restated with a wider tolerance above 85 °C (N2), and R16 follows the budget raised to $81 for the high-temperature magnets (N1). R3 and R5 keep their targets (N3). One requirement is not met (R10), three are at risk (R3, R4 and R5), nine are met by calculation and three by design. R16 is reported against the value-engineering target: the constructable design is estimated at $83.50, $2.50 over the $81 target. How R4 should be treated with one CT is still awaiting Amish (MPL-DDR-001, O2).
+These are the MachinePulse requirements with their status from the TRL 3 calculation note MPL-CAL-001 v0.3, which checks the constructable design of MPL-DDR-003. The design they are checked against follows the decisions Amish made on 2026-09-25 (MPL-DDR-001 and MPL-DDR-002): Wi-Fi, USB adapter, IIS3DWB-class sensor, one CT, baseline alerts, TwinKit or any broker, stock box with stand-offs and high-temperature magnets. Two targets change in v0.4 under MPL-DDR-002: R8 is restated with a wider tolerance above 85 °C (N2), and R16 follows the budget raised to $81 for the high-temperature magnets (N1). R3 and R5 keep their targets (N3). One requirement is not met (R10), two are at risk (R3 and R5), nine are met by calculation and four by design. R16 is reported against the value-engineering target: the constructable design is estimated at $83.50, $2.50 over the $81 target. R4 was restated by Amish on 2026-10-02 as a relative energy trend for the first build, with any kWh figure reported as an estimate (MPL-DDR-001, O2), so it moves from at risk to met by design.
 
 Table 1. Requirements and TRL 3 status.
 
@@ -42,7 +46,7 @@ Table 1. Requirements and TRL 3 status.
 | R1 | Detect run state | Off, idle and running classified from current, with 1 s time resolution | Met by calculation: 1 s RMS windows of 2,000 samples; zero-current reading 0.07 A against a 0.5 A threshold | Bench test on a motor |
 | R2 | Log run time | Run hours per machine, error within 1 % over a week | Met by calculation: worst case 1.00 % on 100 s runs, 0.17 % on 10 min runs | Comparison with a timed log |
 | R3 | Measure load current | Within 5 % of reading from 10 % to 100 % of CT range, after a two-point calibration | At risk: RSS 3.6 % at 10 % of range and 2.1 % at the design point, but 7.0 % worst case at 10 %; ESP32-S3 ADC residual assumed | Comparison with a clamp meter |
-| R4 | Estimate energy per shift | Within 10 % of a reference meter | At risk: 8.5 % RSS, 16.0 % worst case with a load-dependent power factor curve; 26 % with a fixed power factor. Treatment awaiting Amish (MPL-DDR-001, O2) | Comparison with a reference meter |
+| R4 | Estimate energy per shift | A relative energy trend per shift for the first build, with any kWh figure reported as an estimate (restated by Amish, 2026-10-02, from "within 10 % of a reference meter"; a voltage reference stays an option for sites that need absolute energy) | Met by design as restated: one CT with a load-dependent power factor curve gives the trend; as an absolute figure the estimate is 8.5 % RSS, 16.0 % worst case (26 % with a fixed power factor) | Comparison with a reference meter |
 | R5 | Measure vibration | Velocity RMS over 10 to 1,000 Hz (ISO 20816-1 band), three axes | At risk: sensor covers the band, but the magnet mount resonates at about 892 Hz on a painted curved frame (1,783 Hz flat), so readings are 10 % high from about 267 Hz | Mounted shaker check |
 | R6 | Low vibration noise floor | 0.1 mm/s RMS or better, 10 to 1,000 Hz | Met by calculation: 0.037 mm/s (ADXL345-class fallback 0.20 mm/s would miss it) | Mounted noise test |
 | R7 | Resolve running-speed peaks | Spectrum bin 0.5 Hz or finer up to 1 kHz | Met by calculation: 0.407 Hz bins | Spectrum of a known tone |

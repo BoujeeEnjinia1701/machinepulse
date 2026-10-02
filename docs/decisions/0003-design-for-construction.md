@@ -3,9 +3,9 @@ doc_id: MPL-DDR-003
 title: MachinePulse design for construction
 project: MachinePulse
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Changes that make the concept physically buildable, with the reason for each; made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Accepted by Amish on 2026-10-02, with A1 and A2 as recommended; record stays Draft'
 ---
 
 # 0003: Design for construction
 
 - **Date:** 2026-10-01
-- **Status:** Draft. Made under Amish's 2026-09-30 instruction to make the design physically buildable; open for his review. The items in Table 3 are "Proposed, awaiting Amish".
+- **Status:** accepted. Made under Amish's 2026-09-30 instruction to make the design physically buildable. Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." This covers every change in Tables 1 and 2 and the recommendations in Table 3 (A1 and A2), which are now decided as recommended and recorded in the design decisions register (MPL-DEC-001). The record stays Draft.
 
 ## Context
 
@@ -56,12 +60,12 @@ The changes keep what the pod does: the same box, magnets, block footprint, boss
 | Drawing | MPL-DWG-001 Rev P4; making sketches MPL-DWG-101 to 106 added. | Follows the model. |
 | Documents | MPL-CAL-001 v0.3, MPL-REQ-001 v0.5, MPL-PRC-001 v0.5, `bom/bom.csv`, `bom/bom-notes.md`. No requirement target changed; R16 is now reported against the value-engineering target. | Follows the model. |
 
-*Table 3. Proposed, awaiting Amish.*
+*Table 3. Items that were proposed, awaiting Amish; decided by Amish on 2026-10-02.*
 
 | # | Question | Options | Recommendation |
 | --- | --- | --- | --- |
-| A1 | How the 5 V supply enters the box. | (a) cut the USB cable's far plug and wire it through an M12 gland to a screw terminal, as modelled; (b) an IP67 panel-mount USB-C socket in the end wall, about USD 5 more. | (a) for the prototype: cheapest, sealed, and the adapter stays certified. |
-| A2 | Where the status button goes (carried over from the 2026-09-26 review note, item 1). | (a) on the carrier board, pressed with the lid off, as modelled; (b) a sealed button on the lid beside the light pipe, about USD 1.50 more and another lid hole. | (a) for the prototype; (b) if pairing in the field turns out to need it. |
+| A1 | How the 5 V supply enters the box. | (a) cut the USB cable's far plug and wire it through an M12 gland to a screw terminal, as modelled; (b) an IP67 panel-mount USB-C socket in the end wall, about USD 5 more. | (a) for the prototype: cheapest, sealed, and the adapter stays certified. **Decided by Amish, 2026-10-02:** (a). |
+| A2 | Where the status button goes (carried over from the 2026-09-26 review note, item 1). | (a) on the carrier board, pressed with the lid off, as modelled; (b) a sealed button on the lid beside the light pipe, about USD 1.50 more and another lid hole. | (a) for the prototype; (b) if pairing in the field turns out to need it. **Decided by Amish, 2026-10-02:** (a), pressed with the lid off; a sealed lid button only if field pairing shows it is needed. |
 
 ## Consequences
 

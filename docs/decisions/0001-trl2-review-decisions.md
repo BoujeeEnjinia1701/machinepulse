@@ -3,9 +3,9 @@ doc_id: MPL-DDR-001
 title: MachinePulse TRL 2 review decisions
 project: MachinePulse
 doc_type: Design decision record
-version: "0.2"
+version: "0.3"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -17,12 +17,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Recommendations accepted by Amish (DDR-002)
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'O1 and O2 decided by Amish on 2026-10-02'
 ---
 
 # 0001: TRL 2 review decisions
 
 - **Date:** 2026-09-25
-- **Status:** accepted for D1 to D10. On 2026-09-25 Amish wrote "i accept all your recommendations, go with them across all repos", so items D1 to D10 are decided as recommended (see MPL-DDR-002). Items O1 and O2 carry no single recommendation and remain "Proposed, awaiting Amish".
+- **Status:** accepted for D1 to D10. On 2026-09-25 Amish wrote "i accept all your recommendations, go with them across all repos", so items D1 to D10 are decided as recommended (see MPL-DDR-002). Items O1 and O2 carried no single recommendation and were decided by Amish on 2026-10-02 ("i approve your recommendations for all 555 open decisions.").
 
 ## Context
 
@@ -49,12 +53,12 @@ The options for each item are those listed in `docs/REVIEW.md` (session 2026-09-
 | D9 | Budget | No change: `budget_usd` stays $80. Superseded in effect by MPL-DDR-002, N1, which raises it to $81 for high-temperature magnets | Decided by Amish, 2026-09-25: go with recommendation |
 | D10 | Data schedule | Features computed on the pod every minute, a spectrum every 15 min, raw bursts on demand | Decided by Amish, 2026-09-25: go with recommendation |
 
-*Table 2. Items that remain open.*
+*Table 2. Items that remained open, decided by Amish on 2026-10-02.*
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | Co-design partner for the alerts and dashboard: who decides what "changed" should mean to an operator. No recommendation was made. | Proposed, awaiting Amish |
-| O2 | How to treat R4 with one CT. The TRL 2 note offered two courses without choosing: accept that R4 is not met in the first build, or relax R4 to "relative energy trend". MPL-CAL-001 now puts R4 at risk (8.5 % RSS) rather than not met, which bears on this choice. R4 keeps its 10 % target until Amish decides. | Proposed, awaiting Amish |
+| O1 | Co-design partner for the alerts and dashboard: who decides what "changed" should mean to an operator. No recommendation was made. | Decided by Amish, 2026-10-02: the makerspace pilot already decided, with its shop lead deciding what "changed" should mean, and the maintenance person of one small production machine shop as a second voice |
+| O2 | How to treat R4 with one CT. The TRL 2 note offered two courses without choosing: accept that R4 is not met in the first build, or relax R4 to "relative energy trend". MPL-CAL-001 now puts R4 at risk (8.5 % RSS) rather than not met, which bears on this choice. R4 keeps its 10 % target until Amish decides. | Decided by Amish, 2026-10-02: (b), R4 restated as a relative energy trend for the first build, with any kWh figure reported as an estimate; the voltage reference (c) stays an option for sites that need absolute energy |
 
 ## Consequences
 

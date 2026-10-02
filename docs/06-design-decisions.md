@@ -3,9 +3,9 @@ doc_id: MPL-DEC-001
 title: MachinePulse design decisions register
 project: MachinePulse
 doc_type: Design decisions register
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,6 +13,10 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Register opened with the build plan; open decisions from MPL-DDR-001 to 003 and the review note
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Amish approved the recommendations for all six open decisions (2026-10-02); MPL-DDR-003 accepted; moved to decisions made'
 ---
 
 # MachinePulse design decisions register
@@ -21,14 +25,7 @@ Every design decision still to be made, and every decision made, in one place. E
 
 ## Open decisions
 
-| # | Decision needed | Options | Recommendation | Affects in the build | Source |
-| --- | --- | --- | --- | --- | --- |
-| 1 | Design for construction: accept the ten changes that make the pod buildable (separate boss on a set screw, tapped magnet holes, moved stand-offs with nylon screws, grommet, carrier board on stand-offs, three glands, corner pillars, bonded accelerometer, made probe clip, light pipe) | Accept; accept with changes; reject | Accept: none changes what the pod does, its pitch or its safety case | The whole build plan | MPL-DDR-003, Table 1 |
-| 2 | How the 5 V supply enters the box | (a) cut USB cable through an M12 gland to a screw terminal, as modelled; (b) IP67 panel-mount USB-C socket, about USD 5 more | (a) for the prototype | Power gland, carrier 5 V terminal (build plan 3.4.1, wire 1) | MPL-DDR-003, A1 |
-| 3 | Where the status button goes | (a) on the carrier board, pressed with the lid off, as modelled; (b) sealed button on the lid, about USD 1.50 more | (a) for the prototype | Carrier board layout; lid drilling | MPL-DDR-003, A2; review note 2026-09-26, item 1 |
-| 4 | How to treat R4 (energy per shift) with one current transformer | (a) accept at risk with the power factor curve (8.5 % RSS); (b) relax R4 to a relative energy trend; (c) add a voltage reference, about USD 10 more | None made; the earlier note offered (a) or (b) without choosing | None in the build; firmware and gateway at TRL 4 | MPL-DDR-001, O2; MPL-DDR-002 |
-| 5 | Co-design partner for the alerts and dashboard | Who decides what "changed" should mean to an operator | None made | None in the build | MPL-DDR-001, O1 |
-| 6 | Enclosure colour in the renders | (a) two-tone lid and base, as rendered; (b) a single-colour stock box | Buy a single-colour box; keep two-tone as a later option | None in the prototype build (stock box) | Review note 2026-09-26, item 2 |
+None. All open decisions were decided on 2026-10-02.
 
 ## To confirm when parts are bought
 
@@ -57,6 +54,12 @@ Value-engineering target: USD 81 (a hypothetical control target, not a limit). E
 | --- | --- | --- | --- |
 | 2026-09-25 | TRL 2 review items D1 to D10: Wi-Fi first, certified 5 V adapter, IIS3DWB-class sensor, one CT on one phase, first-week baseline alerts, TwinKit or any MQTT broker, stock ABS box on 5 mm nylon stand-offs, makerspace pilot, no budget change, features every minute and a spectrum every 15 minutes | Amish: "i accept all your recommendations, go with them across all repos." | MPL-DDR-001, MPL-DDR-002 |
 | 2026-09-25 | N1 high-temperature pot magnets rated 120 °C; N2 R8 restated (2 °C to 85 °C, 4 °C from 85 to 100 °C); N3 keep the R3 and R5 targets and measure first at TRL 4 | Amish, same instruction | MPL-DDR-002 |
-| 2026-09-30 | Build plans are written in the approved format, and the design is made physically buildable as the pictures are drawn | Amish: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." | MPL-DDR-003 (changes open for review, decision 1 above) |
+| 2026-09-30 | Build plans are written in the approved format, and the design is made physically buildable as the pictures are drawn | Amish: "If you are realising that the design cannot be built as per concept - fix the design assumptions to match and be physically feasible as you draw the illustrations." | MPL-DDR-003 (changes accepted on 2026-10-02, below) |
 | 2026-09-30 | Open decisions are kept in this register, not in the build plan | Amish: "don't log outstanding decisions in this build plan - that is not the place for it." | This register |
 | 2026-10-01 | `budget_usd` is a value-engineering target, not a limit | Amish: "the budgets are a hypothethical control target to ensure we are thinking along a value engineering lens." | This register, Value engineering |
+| 2026-10-02 | Design for construction accepted: all ten changes of Table 1 and their knock-on changes, as made | Amish: "i approve your recommendations for all 555 open decisions." | MPL-DDR-003, Table 1 |
+| 2026-10-02 | Power entry: (a) for the prototype, the cut USB cable through an M12 gland to a screw terminal | Amish: "i approve your recommendations for all 555 open decisions." | MPL-DDR-003, A1 |
+| 2026-10-02 | Status button: (a) for the prototype, on the carrier board and pressed with the lid off; a sealed lid button only if field pairing shows it is needed | Amish: "i approve your recommendations for all 555 open decisions." | MPL-DDR-003, A2; review note 2026-09-26, item 1 |
+| 2026-10-02 | R4: restated as a relative energy trend for the first build, with any kWh figure reported as an estimate; the voltage reference (c) stays an option for sites that need absolute energy | Amish: "i approve your recommendations for all 555 open decisions." | MPL-DDR-001, O2; MPL-DDR-002 |
+| 2026-10-02 | Co-design partner for alerts and dashboard: the makerspace pilot already decided, with its shop lead deciding what "changed" should mean, and the maintenance person of one small production machine shop as a second voice (first candidate type to approach, not agreed) | Amish: "i approve your recommendations for all 555 open decisions." | MPL-DDR-001, O1 |
+| 2026-10-02 | Enclosure colour: a single-colour stock box is bought; two-tone stays a later option | Amish: "i approve your recommendations for all 555 open decisions." | Review note 2026-09-26, item 2 |

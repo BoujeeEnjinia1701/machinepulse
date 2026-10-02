@@ -257,3 +257,38 @@ Unchanged: mains at the current transformer (qualified person, isolation, voltag
 ### Recommended next step
 
 Amish to review MPL-DDR-003 and the register's open decisions. TRL 4 remains on hold; the build plan is ready for a bench build when it is lifted.
+
+## Session 2026-10-02: open decisions decided by Amish
+
+Authority: Amish, 2026-10-02: "i approve your recommendations for all 555 open decisions." The recommendations approved are those written for the open decisions in the design decisions register. No model, BOM quantity or price, or picture was changed; where a decision needs one, it is listed below as a follow-up. `trl` and `trl_target` stay at 3. No commit or push.
+
+### Decisions recorded
+
+6, all moved to "Decisions made" in `docs/06-design-decisions.md`, dated 2026-10-02:
+
+1. Design for construction (MPL-DDR-003) accepted: all ten changes.
+2. Power entry: cut USB cable through an M12 gland to a screw terminal, for the prototype.
+3. Status button: on the carrier board, pressed with the lid off; a sealed lid button only if field pairing shows it is needed.
+4. R4 restated as a relative energy trend for the first build, with any kWh figure reported as an estimate; a voltage reference stays an option for sites that need absolute energy.
+5. Co-design partner for alerts and dashboard: the makerspace pilot's shop lead, with the maintenance person of one small production machine shop as a second voice (first candidates to approach).
+6. Enclosure colour: single-colour stock box; two-tone a later option.
+
+### Documents changed
+
+- `docs/06-design-decisions.md` (MPL-DEC-001 v0.2)
+- `docs/decisions/0003-design-for-construction.md` (MPL-DDR-003 v0.2): accepted; A1 and A2 recorded; status stays Draft
+- `docs/decisions/0001-trl2-review-decisions.md` (MPL-DDR-001 v0.3): O1 and O2 decided
+- `docs/decisions/0002-recommendations-accepted.md` (MPL-DDR-002 v0.2): O1 and O2 decided
+- `docs/02-concept.md` (MPL-PRC-001 v0.6): R4 as a relative trend; partner candidates
+- `docs/03-requirements.md` (MPL-REQ-001 v0.6): R4 restated; met by design as restated; counts
+- `docs/04-calcs/01-sizing.md` (MPL-CAL-001 v0.4): R4 row and summary count
+
+### Follow-up actions to carry approved decisions into the design
+
+1. Decision 4 (docs): State in the firmware and gateway sketch notes that energy is shown as a relative trend against the machine's baseline and any kWh figure is labelled an estimate.
+2. Decision 6 (pictures): Show a single-colour stock box in the photoreal renders (`media/render-*.png`) and `cad/src/product_model.py` when they are next regenerated on Amish's Mac.
+
+### Points found in the review
+
+- A saving in Value engineering (reusing an existing USB charger at the site) conflicts with the decided certified 5 V adapter (D2) and R17; it should be removed.
+- R10 is not met for many machines because the current transformer often has to go inside a terminal box opened by a qualified person, yet there is no open decision on how installs will be handled. A rule that a qualified electrician fits the CT would close it.

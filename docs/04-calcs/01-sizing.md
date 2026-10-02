@@ -3,9 +3,9 @@ doc_id: MPL-CAL-001
 title: MachinePulse sizing calculations
 project: MachinePulse
 doc_type: Calculation
-version: "0.3"
+version: "0.4"
 status: Draft
-date: '2026-10-01'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -21,11 +21,15 @@ revisions:
   date: '2026-10-01'
   author: Amish Chadha
   change: Constructable design (MPL-DDR-003); mass, mount resonance, magnet margins and cost re-run; budget treated as a value-engineering target
+- version: "0.4"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'R4 restated by Amish on 2026-10-02; requirement table and summary count updated (2 at risk, 4 met by design)'
 ---
 
 # MachinePulse sizing calculations
 
-On paper, MachinePulse meets twelve of its seventeen requirements (nine by calculation, three by design), has three at risk, misses one, and its estimated cost is over the value-engineering target. Version 0.3 re-runs the numbers for the constructable design of MPL-DDR-003 (a separate boss on a set screw, a carrier board on stand-offs, a third gland, a grommet, a light pipe and a made probe clip): the pod is 24 g heavier, so the mount resonance and the magnet margins fall slightly, the thermal results are unchanged, and the parts cost rises to $83.50, $2.50 over the $81 value-engineering target. Version 0.2 applied the decisions Amish made on 2026-09-25 (MPL-DDR-002): high-temperature pot magnets rated 120 °C replace the standard 80 °C grade, the budget rises from $80 to $81 to pay for them, and R8 is restated with a 4 °C tolerance from 85 to 100 °C. As a result R8 and R12 move from at risk to met by calculation. The miss is R10: on many machines the current transformer (CT) can only go round a single insulated conductor inside a terminal box or panel, which needs a qualified person and isolation. The three at risk are current accuracy at the bottom of the CT range (R3), energy per shift (R4) and the magnet mount's resonance inside the vibration band (R5). Cost (R16) is reported against the value-engineering target: $83.50 against $81, $2.50 over. Several TRL 2 figures change. Data per day is about 1.15 MB, not 0.4 MB, because a full-resolution spectrum is 7.4 kB, not 1 kB. The magnet mount resonates at about 0.89 to 1.78 kHz rather than being usable to 2 kHz. Energy error with a fixed power factor is about 26 %, not 20 %; with a load-dependent power factor curve it falls to 8.5 % RSS. The box on its own would survive an 80 °C frame; the limit that TRL 2 put at 60 °C was set by the standard magnets at about 81 °C, not by the enclosure, and with the high-temperature magnets it moves to the accelerometer at about 110 °C. The calculations add four details within the adopted design: a CT bias of 1.50 V instead of 1.65 V, clamp diodes on the CT input, a ±16 g accelerometer range, and 5 mm nylon stand-offs between the sensor block and the box floor. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [D7], is the line of that script's output that carries it.
+On paper, MachinePulse meets twelve of its seventeen requirements (nine by calculation, three by design), has three at risk, misses one, and its estimated cost is over the value-engineering target. Version 0.4 records R4 restated by Amish on 2026-10-02 as a relative energy trend, met by design, so thirteen are met (four by design) and two are at risk; the figures below are unchanged. Version 0.3 re-runs the numbers for the constructable design of MPL-DDR-003 (a separate boss on a set screw, a carrier board on stand-offs, a third gland, a grommet, a light pipe and a made probe clip): the pod is 24 g heavier, so the mount resonance and the magnet margins fall slightly, the thermal results are unchanged, and the parts cost rises to $83.50, $2.50 over the $81 value-engineering target. Version 0.2 applied the decisions Amish made on 2026-09-25 (MPL-DDR-002): high-temperature pot magnets rated 120 °C replace the standard 80 °C grade, the budget rises from $80 to $81 to pay for them, and R8 is restated with a 4 °C tolerance from 85 to 100 °C. As a result R8 and R12 move from at risk to met by calculation. The miss is R10: on many machines the current transformer (CT) can only go round a single insulated conductor inside a terminal box or panel, which needs a qualified person and isolation. The three at risk are current accuracy at the bottom of the CT range (R3), energy per shift (R4) and the magnet mount's resonance inside the vibration band (R5). Cost (R16) is reported against the value-engineering target: $83.50 against $81, $2.50 over. Several TRL 2 figures change. Data per day is about 1.15 MB, not 0.4 MB, because a full-resolution spectrum is 7.4 kB, not 1 kB. The magnet mount resonates at about 0.89 to 1.78 kHz rather than being usable to 2 kHz. Energy error with a fixed power factor is about 26 %, not 20 %; with a load-dependent power factor curve it falls to 8.5 % RSS. The box on its own would survive an 80 °C frame; the limit that TRL 2 put at 60 °C was set by the standard magnets at about 81 °C, not by the enclosure, and with the high-temperature magnets it moves to the accelerometer at about 110 °C. The calculations add four details within the adopted design: a CT bias of 1.50 V instead of 1.65 V, clamp diodes on the CT input, a ±16 g accelerometer range, and 5 mm nylon stand-offs between the sensor block and the box floor. Every number in this note is printed by `docs/04-calcs/sizing.py`; the tag in brackets, for example [D7], is the line of that script's output that carries it.
 
 > **Safety:** These are first-principles estimates for a paper proof of concept. They are not a substitute for bench measurements, an electrical safety review of the CT installation or pull tests on real frames. See MPL-PRC-001, Safety.
 
@@ -142,7 +146,7 @@ Value-engineering target: USD 81 (`budget_usd`, a hypothetical control target, n
 | --- | --- | --- | --- | --- |
 | R10 | Install without opening live enclosures | Pod and probe in 10 min without tools; CT on an accessible insulated conductor | Pod and probe need no tools; the CT needs a single insulated conductor, often only inside a terminal box or panel | **Not met** |
 | R3 | Measure load current | Within 5 % of reading, 10 % to 100 % of range | RSS 3.6 % at 10 %, 2.1 % at 49 %; worst case 7.0 % at 10 % [B1] | At risk |
-| R4 | Estimate energy per shift | Within 10 % of a reference meter | 8.5 % RSS, 16.0 % worst case with a PF curve; 26 % with a fixed PF [C2, C4] | At risk |
+| R4 | Estimate energy per shift | Relative energy trend per shift, kWh reported as an estimate (restated by Amish, 2026-10-02; was within 10 % of a reference meter) | 8.5 % RSS, 16.0 % worst case with a PF curve; 26 % with a fixed PF [C2, C4] | Met by design as restated |
 | R5 | Measure vibration | Velocity RMS, 10 to 1,000 Hz, three axes | Sensor covers the band; mount resonance 892 to 1,783 Hz, +10 % from 267 Hz on a curved frame [D7] | At risk |
 | R16 | Low cost and buildable | Parts against the $81 value-engineering target; hand tools; no custom PCB | $83.50, over the target by $2.50 [J1]; hand tools, drill press and perfboard | Over the value-engineering target |
 | R1 | Detect run state | Off, idle, running at 1 s resolution | 1 s RMS windows; 0.07 A zero reading against a 0.5 A threshold [B2, B3] | Met by calculation |
@@ -158,7 +162,7 @@ Value-engineering target: USD 81 (`budget_usd`, a hypothetical control target, n
 | R14 | Keep data local | TwinKit or any MQTT broker; no cloud | MQTT on the local network | Met by design |
 | R17 | Safe by design | Low voltage in the pod; certified adapter; voltage-output CT; no link to controls | Unchanged; CT input now clamped [A6] | Met by design |
 
-Summary: 1 not met, 3 at risk, 9 met by calculation, 3 met by design, 1 (R16) reported against the value-engineering target, none left unverifiable at TRL 3. R13's IP rating and the at-risk items need bench evidence that belongs to TRL 4, which is on hold.
+Summary (v0.4, after R4 was restated by Amish on 2026-10-02): 1 not met, 2 at risk, 9 met by calculation, 4 met by design, 1 (R16) reported against the value-engineering target, none left unverifiable at TRL 3. R13's IP rating and the at-risk items need bench evidence that belongs to TRL 4, which is on hold.
 
 ## Checks against the TRL 2 figures
 

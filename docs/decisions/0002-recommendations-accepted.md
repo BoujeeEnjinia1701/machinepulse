@@ -3,9 +3,9 @@ doc_id: MPL-DDR-002
 title: MachinePulse recommendations accepted
 project: MachinePulse
 doc_type: Design decision record
-version: "0.1"
+version: "0.2"
 status: Draft
-date: '2026-09-25'
+date: '2026-10-02'
 author: Amish Chadha
 license: CERN-OHL-S-2.0
 revisions:
@@ -13,12 +13,16 @@ revisions:
   date: '2026-09-25'
   author: Amish Chadha
   change: Record the recommendations accepted by Amish on 2026-09-25, what changed in the repo, and the items still open
+- version: "0.2"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'O1 and O2 decided by Amish on 2026-10-02'
 ---
 
 # 0002: Recommendations accepted
 
 - **Date:** 2026-09-25
-- **Status:** accepted. Amish accepted every recommendation in this repo on 2026-09-25. Items with no recommendation stay "Proposed, awaiting Amish".
+- **Status:** accepted. Amish accepted every recommendation in this repo on 2026-09-25. Items with no recommendation stayed "Proposed, awaiting Amish" until Amish decided them on 2026-10-02 ("i approve your recommendations for all 555 open decisions.").
 
 ## Context
 
@@ -48,12 +52,12 @@ The options for each item are those in `docs/REVIEW.md` (sessions "/populate" an
 | N2 | R8 range | Restate R8 as within 2 °C from 0 to 85 °C and within 4 °C from 85 to 100 °C | MPL-REQ-001 v0.4; R8 from at risk to met by calculation (1.69 K at 85 °C, 3.59 K at 100 °C) |
 | N3 | R3 and R5 follow-up | Keep both targets; measure the ADC residual and the mount resonance first at TRL 4; consider a flat steel saddle for curved frames | Targets unchanged; noted in MPL-CAL-001 v0.2 and MPL-PRC-001 v0.4. The measurements and any saddle design are TRL 4 work, decided but on hold |
 
-*Table 2. Items still open.*
+*Table 2. Items left open on 2026-09-25, decided by Amish on 2026-10-02.*
 
 | # | Item | Status |
 | --- | --- | --- |
-| O1 | Co-design partner for the alerts and dashboard. No recommendation was made. | Proposed, awaiting Amish |
-| O2 | How to treat R4 with one CT: accept at risk with a power factor curve, relax to "relative energy trend", or add a voltage reference ($10, parts $91.00). The recommendation offered two courses without choosing one, so no option is taken. | Proposed, awaiting Amish |
+| O1 | Co-design partner for the alerts and dashboard. No recommendation was made. | Decided by Amish, 2026-10-02: the makerspace pilot already decided, with its shop lead deciding what "changed" should mean, and the maintenance person of one small production machine shop as a second voice |
+| O2 | How to treat R4 with one CT: accept at risk with a power factor curve, relax to "relative energy trend", or add a voltage reference ($10, parts $91.00). The recommendation offered two courses without choosing one, so no option is taken. | Decided by Amish, 2026-10-02: (b), R4 restated as a relative energy trend for the first build, with any kWh figure reported as an estimate; the voltage reference (c) stays an option for sites that need absolute energy |
 
 ## Consequences
 
