@@ -3,7 +3,7 @@ doc_id: MPL-DEC-001
 title: MachinePulse design decisions register
 project: MachinePulse
 doc_type: Design decisions register
-version: "0.2"
+version: "0.3"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -17,6 +17,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: 'Amish approved the recommendations for all six open decisions (2026-10-02); MPL-DDR-003 accepted; moved to decisions made'
+- version: "0.3"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Value engineering: saving that reused an existing USB charger removed (conflicts with the certified adapter, D2, and R17)'
 ---
 
 # MachinePulse design decisions register
@@ -46,7 +50,7 @@ Value-engineering target: USD 81 (a hypothetical control target, not a limit). E
 
 - The largest lines are the accelerometer (USD 15, the least certain price), the current transformer (USD 10), the controller (USD 9), the box with its glands (USD 9.50) and the power adapter (USD 8).
 - Making the design constructable added USD 2.50: the third gland and the larger M16 gland (USD 0.50), the carrier board's sockets, terminals and light pipe (USD 1.00), the made probe clip with its magnets in place of a bought clip (USD 0.50 net) and the grommet, set screw and carrier fixings (USD 0.50).
-- Savings worth trying: the steel pads (USD 4 for two) are needed only on aluminium-framed machines and could be left out of the standard kit; the accelerometer price should be checked against current breakout boards; an adapter and cable bought in quantity, or reused from an existing USB charger at the site, would cover the gap.
+- Savings worth trying: the steel pads (USD 4 for two) are needed only on aluminium-framed machines and could be left out of the standard kit; the accelerometer price should be checked against current breakout boards; an adapter and cable bought in quantity would cover the gap; a certified adapter is kept for every kit (D2, R17).
 
 ## Decisions made
 

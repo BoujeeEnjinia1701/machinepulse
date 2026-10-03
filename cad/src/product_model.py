@@ -1,6 +1,6 @@
 """MachinePulse product appearance model (build123d), TRL 3.
 
-Finished-product look for photoreal renders: a two-tone filleted enclosure with a parting-line
+Finished-product look for photoreal renders: a single-colour filleted stock enclosure with a parting-line
 groove, lid screws, a lit status light pipe, a status button and a printed label; fluted M12
 cable glands; the machined aluminium sensor block on nylon stand-offs and high-temperature pot
 magnets; the boards inside; a split-core current transformer with its seam, latch, marking and
@@ -43,8 +43,8 @@ RENDER_VIEWS = [
 ]
 
 # Colours (restrained product palette; accent from the kit)
-C_LID = "#E6E8EB"
-C_BASE = "#5B636E"
+C_LID = "#D3D7DB"
+C_BASE = C_LID           # single-colour stock box (decided 2026-10-02); two-tone is a later option
 C_DARK = "#23272E"
 C_ACCENT = "#0F766E"
 C_LED = "#34D399"

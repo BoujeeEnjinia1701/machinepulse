@@ -292,3 +292,33 @@ Authority: Amish, 2026-10-02: "i approve your recommendations for all 555 open d
 
 - A saving in Value engineering (reusing an existing USB charger at the site) conflicts with the decided certified 5 V adapter (D2) and R17; it should be removed.
 - R10 is not met for many machines because the current transformer often has to go inside a terminal box opened by a qualified person, yet there is no open decision on how installs will be handled. A rule that a qualified electrician fits the CT would close it.
+
+## Session 2026-10-02: approved follow-ups carried out
+
+Amish approved all follow-up actions from the open-decision sign-off on 2026-10-02. trl stays 3; nothing was built or tested. No model, BOM, calculation or picture change was called for by the decisions, so STEP, STL, drawings, build plan pictures and `sizing.py` results are unchanged.
+
+### Approved follow-ups carried out
+
+1. Decision 4 (docs): done. The precis (`docs/02-concept.md`, MPL-PRC-001 v0.7) now states the rule for the firmware and gateway notes: energy is shown only as a relative trend against the machine's baseline, and any kWh figure is labelled an estimate. No firmware or gateway sketch file exists yet (firmware is TRL 4 work), so the rule is recorded where the design is described.
+2. Decision 6 (pictures): done for the appearance model: `cad/src/product_model.py` now draws the lid and base of the enclosure in one colour (a single-colour stock box). The photoreal renders are made next on Amish's Mac.
+
+### Points found in the review, handled
+
+- The Value engineering saving that reused an existing USB charger was removed from `docs/06-design-decisions.md` (MPL-DEC-001 v0.3); a certified adapter stays in every kit (D2, R17).
+- Not changed: R10 and a rule that a qualified electrician fits the CT. That is a new decision for Amish (Proposed, awaiting Amish).
+
+### Requirement status and cost
+
+No requirement status changed. Value-engineering target: USD 81. Estimated cost of the constructable design: USD 83.50 (USD 2.50 over the target); `budget_usd` unchanged. Mass unchanged.
+
+### Render scenes
+
+Exported to `/home/claude/renders/machinepulse`: hero, exploded and detail (one .npz and .json each, plus `machinepulse__jobs.json`). Photoreal renders, captions, `card.png` and `social-preview.png` are made on the Mac.
+
+### Cross-repo actions
+
+None.
+
+## 2026-10-02: photoreal renders redone on the constructable design
+
+Rendered with Blender Cycles on Amish's Mac from the updated appearance model; captioned with `.kit/photo_caption.py`; `media/card.png` and `media/social-preview.png` regenerated with `.kit/cards.py`. Views: hero, exploded, detail. image_qc passes. Appearance deviations are those logged above as proposed, awaiting Amish.

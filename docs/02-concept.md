@@ -3,7 +3,7 @@ doc_id: MPL-PRC-001
 title: MachinePulse design precis
 project: MachinePulse
 doc_type: Design precis
-version: "0.6"
+version: "0.7"
 status: Draft
 date: '2026-10-02'
 author: Amish Chadha
@@ -33,6 +33,10 @@ revisions:
   date: '2026-10-02'
   author: Amish Chadha
   change: 'Decisions of 2026-10-02 carried in: R4 as a relative energy trend with kWh as an estimate, co-design partner candidates'
+- version: "0.7"
+  date: '2026-10-02'
+  author: Amish Chadha
+  change: 'Firmware and gateway energy rule stated: relative trend, kWh labelled an estimate (decision of 2026-10-02)'
 ---
 
 # MachinePulse design precis
@@ -52,7 +56,7 @@ Figure 1. MachinePulse on a 7.5 kW class induction motor (grey, for scale), gene
 3. **Sense temperature.** A DS18B20 probe in a stainless sleeve sits in a small magnetic clip with a thermal pad on the frame near a bearing.
 4. **Summarize on the pod.** Every 60 s the ESP32-S3 controller records a 4 s vibration burst, decimates it from 26.7 kHz to 3.33 kHz as it reads the sensor, and computes velocity RMS over 10 to 1,000 Hz (the ISO 20816-1 band ([ISO](https://www.iso.org/standard/63180.html))), acceleration RMS, crest factor and the amplitudes at 1x and 2x running speed. It adds run state, run seconds, mean and peak current, starts, and temperature.
 5. **Send and store.** The summary goes over Wi-Fi to an MQTT broker, by default on the TwinKit gateway. If the network is down, summaries queue in flash for about 14 days; spectra are kept only while space allows.
-6. **Compare with the machine's own baseline.** During the first week of running, the gateway software learns a baseline per load band. Afterward it flags a change, for example vibration velocity above twice its baseline or temperature rise above baseline at the same load, for a person to inspect. Energy per shift uses a power factor curve built from the nameplate and the measured no-load current, and is shown as a relative trend against the machine's own baseline, with any kWh figure marked as an estimate (decided by Amish, 2026-10-02).
+6. **Compare with the machine's own baseline.** During the first week of running, the gateway software learns a baseline per load band. Afterward it flags a change, for example vibration velocity above twice its baseline or temperature rise above baseline at the same load, for a person to inspect. Energy per shift uses a power factor curve built from the nameplate and the measured no-load current, and is shown as a relative trend against the machine's own baseline, with any kWh figure marked as an estimate (decided by Amish, 2026-10-02). Rule for the firmware and gateway notes: the pod reports raw current and load band, and the gateway software shows energy only as a relative trend against the machine's baseline; any kWh figure it shows carries the label "estimate". Both are TRL 4 work and are not written here.
 
 ![Data flow](../media/flow.png)
 
